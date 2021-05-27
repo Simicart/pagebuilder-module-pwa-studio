@@ -3,7 +3,7 @@
   "private": true,
   "version": "0.0.1",
   "description": "A new project based on @magento/venia-concept",
-  "author": "Cody Nguyen <cody@simicart.com>",
+  "author": "SimiCart",
   "license": "UNLICENSED",
   "scripts": {
     "buildpack": "buildpack",
