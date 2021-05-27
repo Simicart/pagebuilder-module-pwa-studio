@@ -6,9 +6,9 @@ git clone https://github.com/Simicart/pagebuilder-module-pwa-studio
 
 cd pagebuilder-module-pwa-studio
 
-git clone https://github.com/codynguyen1/simi-pb-dashboard
+git clone https://github.com/Simicart/simi-pagebuilder-react
 
-cd simi-pb-dashboard
+cd simi-pagebuilder-react
 
 yarn install && yarn run build
 
