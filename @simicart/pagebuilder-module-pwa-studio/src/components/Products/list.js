@@ -15,7 +15,7 @@ const mapGalleryItem = item => {
 
 const ProductList = props => {
     const { item } = props;
-    const filterData = { category_id: { eq: '42' } };
+    const filterData = { category_id: { eq: '6' } };
     const { data, loading } = useProducts({ filterData });
     const classes = mergeClasses(defaultClasses, props.classes);
     if (data && data.products && data.products.items && data.products.items.length) {
