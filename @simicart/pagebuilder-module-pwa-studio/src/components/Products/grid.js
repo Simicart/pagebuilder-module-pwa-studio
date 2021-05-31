@@ -16,11 +16,10 @@ const mapGalleryItem = item => {
 
 const ProductGrid = props => {
     const { item } = props;
-    const filterData = { category_id: { eq: '6' } };
-
-    if (item.parsedData) {
-        if (item.parsedData.openProductsWidthSKUs) {
-            let openProductsWidthSKUs = item.parsedData.openProductsWidthSKUs;
+    let filterData = { category_id: { eq: '6' } };
+    if (item.dataParsed) {
+        if (item.dataParsed.openProductsWidthSKUs) {
+            let openProductsWidthSKUs = item.dataParsed.openProductsWidthSKUs;
             openProductsWidthSKUs = openProductsWidthSKUs.trim();
             openProductsWidthSKUs = openProductsWidthSKUs.split(",");
             filterData = {
@@ -28,8 +27,8 @@ const ProductGrid = props => {
                     in: openProductsWidthSKUs
                 }
             }
-        } else if (item.parsedData.openCategoryProducts) {
-            filterData = { category_id: { eq: String(item.parsedData.openCategoryProducts) } };
+        } else if (item.dataParsed.openCategoryProducts) {
+            filterData = { category_id: { eq: String(item.dataParsed.openCategoryProducts) } };
         }
     }
 
