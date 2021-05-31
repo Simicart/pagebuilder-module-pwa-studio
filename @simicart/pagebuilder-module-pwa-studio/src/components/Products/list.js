@@ -1,8 +1,9 @@
 import React from 'react';
-import { useProducts } from '../Hooks/useProducts';
+import { useProducts } from '../../hooks/useProducts';
 import GalleryItem from '@magento/venia-ui/lib/components/Gallery/item';
 import defaultClasses from './list.css';
 import { mergeClasses } from '@magento/venia-ui/lib/classify';
+import LoadingIndicator from '@magento/venia-ui/lib/components/LoadingIndicator';
 
 const mapGalleryItem = item => {
     const { small_image } = item;
@@ -15,7 +16,22 @@ const mapGalleryItem = item => {
 
 const ProductList = props => {
     const { item } = props;
-    const filterData = { category_id: { eq: '6' } };
+    let filterData = { category_id: { eq: '6' } };
+    if (item.parsedData) {
+        if (item.parsedData.openProductsWidthSKUs) {
+            let openProductsWidthSKUs = item.parsedData.openProductsWidthSKUs;
+            openProductsWidthSKUs = openProductsWidthSKUs.trim();
+            openProductsWidthSKUs = openProductsWidthSKUs.split(",");
+            filterData = {
+                sku: {
+                    in: openProductsWidthSKUs
+                }
+            }
+        } else if (item.parsedData.openCategoryProducts) {
+            filterData = { category_id: { eq: String(item.parsedData.openCategoryProducts) } };
+        }
+    }
+
     const { data, loading } = useProducts({ filterData });
     const classes = mergeClasses(defaultClasses, props.classes);
     if (data && data.products && data.products.items && data.products.items.length) {
@@ -41,12 +57,14 @@ const ProductList = props => {
                 >
                     {
                         data.products.items.map(productItem => {
-                            return <GalleryItem item={mapGalleryItem(productItem)} classes={classes} />
+                            return <GalleryItem key={item.id} item={mapGalleryItem(productItem)} classes={classes} />
                         })}
 
                 </div>
             </div>
         )
+    } else if (loading) {
+        return <LoadingIndicator />
     }
     return ''
 }

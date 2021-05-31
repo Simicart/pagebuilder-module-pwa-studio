@@ -173,7 +173,8 @@ export const useProducts = props => {
                 currentPage: 1,
                 pageSize: pageSize ? pageSize : 6,
                 filters: filterData
-            }
+            },
+            fetchPolicy: 'cache-and-network'
         }
     )
     const { data, loading } = result;
