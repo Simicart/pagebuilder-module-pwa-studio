@@ -27,17 +27,25 @@ export const usePbFinder = props => {
 
     const findPage = (pathName) => {
         setPathFoFind(pathName);
-        setLoading(true);
-        sendRequest(
-            endPoint,
-            (result) => {
-                setLoading(false);
-                setPbData(result);
-            },
-            GET_PB_PAGES_QUERY,
-            { integrationToken },
-            'getPbPage',
-        );
+        if (window.smPbPagesByToken) {
+            setPbData(window.smPbPagesByToken);
+        } else {
+            if (!loading) {
+                setLoading(true);
+                sendRequest(
+                    endPoint,
+                    (result) => {
+                        setLoading(false);
+                        if (result && result.data && result.data.spb_page)
+                            window.smPbPagesByToken = result;
+                        setPbData(result);
+                    },
+                    GET_PB_PAGES_QUERY,
+                    { integrationToken },
+                    'getPbPage',
+                );
+            }
+        }
     }
 
     if (pbData && pbData.data && pbData.data.spb_page && pathToFind) {
