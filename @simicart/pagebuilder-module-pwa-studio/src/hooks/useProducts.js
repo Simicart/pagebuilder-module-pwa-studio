@@ -22,6 +22,7 @@ const ItemFragment = gql`
             __typename
         }
         url_key
+        url_suffix
         special_price
         special_from_date
         type_id
@@ -131,7 +132,7 @@ const ItemFragment = gql`
 `;
 
 const GET_PRODUCTS = gql`
-    query GetCategories(
+    query getProducts(
         $pageSize: Int!
         $currentPage: Int!
         $filters: ProductAttributeFilterInput!
@@ -165,15 +166,18 @@ const GET_PRODUCTS = gql`
 `;
 
 export const useProducts = props => {
-    const { filterData, pageSize } = props;
+    const { filterData, pageSize, sortData } = props;
+    const variables = {
+        currentPage: 1,
+        pageSize: pageSize ? pageSize : 6,
+        filters: filterData
+    };
+    if (sortData)
+        variables.sort = sortData;
     const result = useQuery(
         GET_PRODUCTS,
         {
-            variables: {
-                currentPage: 1,
-                pageSize: pageSize ? pageSize : 6,
-                filters: filterData
-            },
+            variables,
             fetchPolicy: 'cache-and-network'
         }
     )

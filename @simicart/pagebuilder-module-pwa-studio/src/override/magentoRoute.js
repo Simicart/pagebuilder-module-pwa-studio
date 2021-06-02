@@ -5,8 +5,12 @@ import { useMagentoRoute } from '@magento/peregrine/lib/talons/MagentoRoute';
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
 import { useLocation } from 'src/drivers';
-import PageBuilderPage from '../components/PageBuilderPage';
-import { usePbFinder } from '../hooks/usePbFinder';
+import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
+import ProductList from '../components/Products/list';
+import ProductGrid from '../components/Products/grid';
+
+const endPoint = "https://magento24.pwa-commerce.com/pb/graphql/";
+const integrationToken = "14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444";
 
 const MESSAGES = new Map()
     .set(
@@ -20,9 +24,11 @@ const MagentoRoute = () => {
     const {
         loading: pbLoading,
         pageMaskedId,
-        findPage,
-        endPoint
-    } = usePbFinder();
+        findPage
+    } = usePbFinder({
+        endPoint,
+        integrationToken
+    });
     const { formatMessage } = useIntl();
     const talonProps = useMagentoRoute();
     const {
@@ -38,9 +44,14 @@ const MagentoRoute = () => {
             findPage(location.pathname);
         }
     }, [location, pageMaskedId, isNotFound]);
-    
+
     if (pageMaskedId && pageMaskedId !== 'notfound') {
-        return <PageBuilderPage endPoint={endPoint} maskedId={pageMaskedId} />
+        return <PageBuilderComponent
+            endPoint={endPoint}
+            maskedId={pageMaskedId}
+            ProductList={ProductList}
+            ProductGrid={ProductGrid}
+        />
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
     }

@@ -17,8 +17,11 @@ const mapGalleryItem = item => {
 const ProductList = props => {
     const { item } = props;
     let filterData = { category_id: { eq: '6' } };
+    let sortData;
+    let pageSize = 6;
     if (item.dataParsed) {
-        if (item.dataParsed.openProductsWidthSKUs) {
+        const { dataParsed } = item;
+        if (dataParsed.openProductsWidthSKUs) {
             let openProductsWidthSKUs = item.dataParsed.openProductsWidthSKUs;
             openProductsWidthSKUs = openProductsWidthSKUs.trim();
             openProductsWidthSKUs = openProductsWidthSKUs.split(",");
@@ -27,12 +30,20 @@ const ProductList = props => {
                     in: openProductsWidthSKUs
                 }
             }
-        } else if (item.dataParsed.openCategoryProducts) {
-            filterData = { category_id: { eq: String(item.dataParsed.openCategoryProducts) } };
+        } else if (dataParsed.openCategoryProducts) {
+            filterData = { category_id: { eq: String(dataParsed.openCategoryProducts) } };
+        }
+        if (dataParsed.openProductsWidthSortAtt) {
+            let directionToSort = dataParsed.openProductsWidthSortDir ? dataParsed.openProductsWidthSortDir.toUpperCase() : 'ASC';
+            sortData = {};
+            sortData[dataParsed.openProductsWidthSortAtt] = directionToSort;
+        }
+        if (dataParsed.openProductsWidthSortPageSize) {
+            pageSize = parseInt(dataParsed.openProductsWidthSortPageSize);
         }
     }
 
-    const { data, loading } = useProducts({ filterData });
+    const { data, loading } = useProducts({ filterData, sortData, pageSize });
     const classes = mergeClasses(defaultClasses, props.classes);
     if (data && data.products && data.products.items && data.products.items.length) {
         return (
@@ -56,8 +67,8 @@ const ProductList = props => {
                     }}
                 >
                     {
-                        data.products.items.map(productItem => {
-                            return <GalleryItem key={item.id} item={mapGalleryItem(productItem)} classes={classes} />
+                        data.products.items.map((productItem, indx) => {
+                            return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes} />
                         })}
 
                 </div>
