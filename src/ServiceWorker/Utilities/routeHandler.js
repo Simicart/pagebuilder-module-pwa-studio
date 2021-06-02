@@ -29,4 +29,7 @@ export const isHomeRoute = url => {
  * @returns {boolean}
  */
 export const isHTMLRoute = url =>
-    isHomeRoute(url) || new RegExp('\\.html$').test(url.pathname);
+    /*isHomeRoute(url) || new RegExp('\\.html$').test(url.pathname);*/
+    (isHomeRoute(url) || new RegExp('\\.html$').test(url.pathname))
+        && (url.pathname.indexOf('admin') === -1
+        && (url.pathname.indexOf('secure') === -1))
