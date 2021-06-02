@@ -18,7 +18,7 @@ const ProductGrid = props => {
     const { item } = props;
     let filterData = { category_id: { eq: '6' } };
     let sortData;
-    let pageSize = 6;
+    let pageSize = 8;
     if (item.dataParsed) {
         const { dataParsed } = item;
         if (dataParsed.openProductsWidthSKUs) {

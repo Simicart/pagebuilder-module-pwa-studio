@@ -169,7 +169,7 @@ export const useProducts = props => {
     const { filterData, pageSize, sortData } = props;
     const variables = {
         currentPage: 1,
-        pageSize: pageSize ? pageSize : 6,
+        pageSize: pageSize ? pageSize : 12,
         filters: filterData
     };
     if (sortData)
