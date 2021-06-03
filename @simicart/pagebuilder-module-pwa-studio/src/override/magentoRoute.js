@@ -9,7 +9,7 @@ import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 
-const endPoint = "https://magento24.pwa-commerce.com/pb/graphql/";
+const endPoint = "https://tapita.io/pb/graphql/";
 const integrationToken = "14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444";
 
 const MESSAGES = new Map()
