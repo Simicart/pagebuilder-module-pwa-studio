@@ -24,7 +24,8 @@ const MagentoRoute = () => {
     const {
         loading: pbLoading,
         pageMaskedId,
-        findPage
+        findPage,
+        pathToFind
     } = usePbFinder({
         endPoint,
         integrationToken
@@ -40,13 +41,15 @@ const MagentoRoute = () => {
     } = talonProps;
 
     useEffect(() => {
-        if (!pageMaskedId && location && location.pathname && (isNotFound || location.pathname === '/')) {
-            findPage(location.pathname);
+        if (location && location.pathname && (isNotFound || location.pathname === '/')) {
+            if (!pageMaskedId || (location.pathname !== pathToFind))
+                findPage(location.pathname);
         }
     }, [location, pageMaskedId, isNotFound]);
 
     if (pageMaskedId && pageMaskedId !== 'notfound') {
         return <PageBuilderComponent
+            key={pageMaskedId}
             endPoint={endPoint}
             maskedId={pageMaskedId}
             ProductList={ProductList}
