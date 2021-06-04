@@ -47,7 +47,7 @@ const MagentoRoute = () => {
         }
     }, [location, pageMaskedId, isNotFound]);
 
-    if (pageMaskedId && pageMaskedId !== 'notfound') {
+    if (pageMaskedId && pageMaskedId !== 'notfound' && (isNotFound || location.pathname === '/')) {
         return <PageBuilderComponent
             key={pageMaskedId}
             endPoint={endPoint}
