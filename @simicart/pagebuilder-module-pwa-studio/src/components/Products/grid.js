@@ -34,7 +34,7 @@ const ProductGrid = props => {
             filterData = { category_id: { eq: String(dataParsed.openCategoryProducts) } };
         }
         if (dataParsed.openProductsWidthSortAtt) {
-            let directionToSort = dataParsed.openProductsWidthSortDir ? dataParsed.openProductsWidthSortDir.toUpperCase() : 'ASC';
+            const directionToSort = dataParsed.openProductsWidthSortDir ? dataParsed.openProductsWidthSortDir.toUpperCase() : 'ASC';
             sortData = {};
             sortData[dataParsed.openProductsWidthSortAtt] = directionToSort;
         }

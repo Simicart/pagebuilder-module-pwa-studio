@@ -2,3 +2,5 @@
 dist/
 # Generated coverage pages
 coverage
+node_modules
+/simi-pagebuilder-react
