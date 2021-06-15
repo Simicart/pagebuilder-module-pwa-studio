@@ -17,7 +17,6 @@ import app from '@magento/peregrine/lib/store/actions/app';
 import App, {AppContextProvider} from '@magento/venia-ui/lib/components/App';
 
 import {registerSW} from './registerSW';
-import {FormattedMessage} from "react-intl";
 
 const {BrowserPersistence} = Util;
 const apiBase = new URL('/graphql', location.origin).toString();
@@ -117,11 +116,6 @@ const apolloLink = ApolloLink.from([
 ReactDOM.render(
     <Adapter apiBase={apiBase} apollo={{link: apolloLink}} store={store}>
         <AppContextProvider>
-            <FormattedMessage
-                id="account"
-                defaultMessage="account"
-                values={{name: 'Me'}}
-            />
             <App/>
         </AppContextProvider>
     </Adapter>,
