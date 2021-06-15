@@ -1,24 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { ApolloLink } from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
-import { onError } from '@apollo/client/link/error';
-import { RetryLink } from '@apollo/client/link/retry';
+import {ApolloLink} from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
+import {onError} from '@apollo/client/link/error';
+import {RetryLink} from '@apollo/client/link/retry';
 import getWithPath from 'lodash.get';
 import setWithPath from 'lodash.set';
 
 import MutationQueueLink from '@adobe/apollo-link-mutation-queue';
 
-import { Util } from '@magento/peregrine';
-import { Adapter } from '@magento/venia-drivers';
+import {Util} from '@magento/peregrine';
+import {Adapter} from '@magento/venia-drivers';
 import store from './store';
 import app from '@magento/peregrine/lib/store/actions/app';
-import App, { AppContextProvider } from '@magento/venia-ui/lib/components/App';
+import App, {AppContextProvider} from '@magento/venia-ui/lib/components/App';
 
-import { registerSW } from './registerSW';
+import {registerSW} from './registerSW';
 
-const { BrowserPersistence } = Util;
+import {IntlProvider, FormattedMessage, FormattedNumber} from 'react-intl'
+
+const {BrowserPersistence} = Util;
 const apiBase = new URL('/graphql', location.origin).toString();
 
 /**
@@ -27,7 +29,7 @@ const apiBase = new URL('/graphql', location.origin).toString();
  */
 
 // The Venia adapter is not opinionated about auth.
-const authLink = setContext((_, { headers }) => {
+const authLink = setContext((_, {headers}) => {
     // get the authentication token from local storage if it exists.
     const storage = new BrowserPersistence();
     const token = storage.getItem('signin_token');
@@ -42,9 +44,9 @@ const authLink = setContext((_, { headers }) => {
 });
 
 // https://www.apollographql.com/docs/link/links/error/
-const errorLink = onError(({ graphQLErrors, networkError, response }) => {
+const errorLink = onError(({graphQLErrors, networkError, response}) => {
     if (graphQLErrors)
-        graphQLErrors.forEach(({ message, locations, path }) =>
+        graphQLErrors.forEach(({message, locations, path}) =>
             console.log(
                 `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`
             )
@@ -52,13 +54,13 @@ const errorLink = onError(({ graphQLErrors, networkError, response }) => {
     if (networkError) console.log(`[Network error]: ${networkError}`);
 
     if (response) {
-        const { data, errors } = response;
+        const {data, errors} = response;
         let pathToCartItems;
 
         // It's within the GraphQL spec to receive data and errors, where errors are merely informational and not
         // intended to block. Almost all existing components were not built with this in mind, so we build special
         // handling of this error message so we can deal with it at the time we deem appropriate.
-        errors.forEach(({ message, path }, index) => {
+        errors.forEach(({message, path}, index) => {
             if (
                 message === 'Some of the products are out of stock.' ||
                 message === 'There are no source items with the in stock status'
@@ -112,10 +114,16 @@ const apolloLink = ApolloLink.from([
     Adapter.apolloLink(apiBase)
 ]);
 
+const messagesInFrench = {
+    myMessage: "Aujourd'hui, c'est le {ts, date, ::yyyyMMdd}",
+}
+
 ReactDOM.render(
-    <Adapter apiBase={apiBase} apollo={{ link: apolloLink }} store={store}>
+    <Adapter apiBase={apiBase} apollo={{link: apolloLink}} store={store}>
         <AppContextProvider>
-            <App />
+            <IntlProvider messages={messagesInFrench} locale="fr" defaultLocale="en">
+                <App/>
+            </IntlProvider>
         </AppContextProvider>
     </Adapter>,
     document.getElementById('root')

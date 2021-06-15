@@ -1,6 +1,9 @@
 # pagebuilder-module-pwa-studio
 PageBuilder client side module for pwa-studio
 
+
+create `.env` file like `.env_sample`
+
 ```
 git clone https://github.com/Simicart/pagebuilder-module-pwa-studio
 
