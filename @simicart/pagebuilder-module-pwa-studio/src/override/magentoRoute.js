@@ -62,6 +62,11 @@ const MagentoRoute = () => {
         pageMaskedId !== 'notfound' &&
         (isNotFound || location.pathname === '/')
     ) {
+        try {
+            document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = 'unset';
+        } catch (err) {
+            console.warn(err);
+        }
         return (
             <PageBuilderComponent
                 key={pageMaskedId}
@@ -74,6 +79,11 @@ const MagentoRoute = () => {
         );
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
+    }
+    try {
+        document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = '1440px';
+    } catch (err) {
+        console.warn(err);
     }
 
     if (isLoading || isRedirect) {
