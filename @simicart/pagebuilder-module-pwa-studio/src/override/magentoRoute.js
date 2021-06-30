@@ -8,6 +8,7 @@ import { useLocation } from 'src/drivers';
 import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
+import Category from '../components/Category';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
@@ -75,6 +76,7 @@ const MagentoRoute = () => {
                 pageData={pageData && pageData.publish_items ? pageData : false}
                 ProductList={ProductList}
                 ProductGrid={ProductGrid}
+                Category={Category}
             />
         );
     } else if (pbLoading) {
