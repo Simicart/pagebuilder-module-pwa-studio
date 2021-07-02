@@ -39,14 +39,14 @@ const Category = props => {
             const { dataParsed } = item;
             const imageStyle = {
                 display: 'block',
-                margin: '10px auto'
+                margin: '10px auto',
+                width: '100%',
             };
-            if (dataParsed.width) imageStyle.width = dataParsed.width;
-            if (dataParsed.height) imageStyle.height = dataParsed.height;
             return (
                 <Link
                     className={classes.root}
                     to={foundCate.url_path + foundCate.url_suffix}
+                    style={{width: '100%'}}
                 >
                     {dataParsed.image ? (
                         <img
