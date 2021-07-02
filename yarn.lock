@@ -11989,9 +11989,9 @@ react-refresh@0.8.3, react-refresh@^0.8.3:
   integrity sha512-X8jZHc7nCMjaCqoU+V2I0cOhNW+QMBwSUkeXnTi8IPe6zaRWfn60ZzvFDZqWPfmSJfjub7dDW1SP0jaHWLu/hg==
 
 react-responsive-carousel@^3.2.18:
-  version "3.2.18"
-  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.2.18.tgz#5e44b3aab6c482c63cd1c6045ea48c97b49a69b9"
-  integrity sha512-A6eXp/HofjZ8p23Q/b25dqtokHFFXKhKKn82ZJkCI0edxjtAUid8SImr8rHp0rRi9aEYXej3ynWOzaUHFE4RKA==
+  version "3.2.19"
+  resolved "https://registry.yarnpkg.com/react-responsive-carousel/-/react-responsive-carousel-3.2.19.tgz#ded0d5888b0a605cf28f0db3fad04bbbb2ff3616"
+  integrity sha512-lOO6CscsxnQoNnrmLXNXu7u3U0znY44jGloX9Zayki9+OdUs63YXypSgV7dzaTmlem4SXy4rIXBR8+gjA9zyxg==
   dependencies:
     classnames "^2.2.5"
     prop-types "^15.5.8"
@@ -12098,9 +12098,13 @@ react-textarea-autosize@^8.1.1:
     use-composed-ref "^1.0.0"
     use-latest "^1.0.0"
 
-"react@link:./simi-pagebuilder-react/node_modules/react":
-  version "0.0.0"
-  uid ""
+react@^17.0.1:
+  version "17.0.2"
+  resolved "https://registry.yarnpkg.com/react/-/react-17.0.2.tgz#d0b5cc516d29eb3eee383f75b62864cfb6800037"
+  integrity sha512-gnhPt75i/dq/z3/6q/0asP78D0u592D5L1pd7M8P+dck6Fu/jJeL6iVVK23fptSUZj8Vjf++7wXA8UNclGQcbA==
+  dependencies:
+    loose-envify "^1.1.0"
+    object-assign "^4.1.1"
 
 reactcss@^1.2.0:
   version "1.2.3"
@@ -12993,9 +12997,14 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
-"simi-pagebuilder-react@link:./simi-pagebuilder-react":
-  version "0.0.0"
-  uid ""
+simi-pagebuilder-react@^1.1.7:
+  version "1.1.7"
+  resolved "https://registry.yarnpkg.com/simi-pagebuilder-react/-/simi-pagebuilder-react-1.1.7.tgz#ed5eca48f445e2163eb1ae3125e0d0445449d147"
+  integrity sha512-/AYajQdGphvLivwP7SPbcDLcrnbXnJS3/GieSuGh3ac61Ae1Svl6dWZZAnqBpH6JiF1phBPpH/cYc/uGvSx4SA==
+  dependencies:
+    react-helmet "^6.1.0"
+    react-html-parser "^2.0.2"
+    react-responsive-carousel "^3.2.18"
 
 simple-concat@^1.0.0:
   version "1.0.1"
