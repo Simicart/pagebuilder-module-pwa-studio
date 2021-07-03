@@ -1,4 +1,7 @@
 # pagebuilder-module-pwa-studio
+
+![alt text](https://tapita.io/wp-content/uploads/2021/05/templates.png)
+
 PageBuilder client side module for pwa-studio
 
 ## To check it, run:
