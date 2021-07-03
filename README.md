@@ -15,6 +15,20 @@ Run command below to install and watch:
 yarn install && yarn run watch
 ```
 
+## To Integrate your key
+
+Open the file at
+
+```
+  @simicart/pagebuilder-module-pwa-studio/src/override/magentoRoute.js
+```
+
+And change the value at this line:
+```
+  const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
+```
+to your integration key and re-run the watch command.
+
 ## To Develop
 
 ### Firstly, modify the package json:
