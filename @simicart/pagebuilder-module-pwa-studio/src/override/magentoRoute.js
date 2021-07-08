@@ -10,7 +10,8 @@ import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 
 const endPoint = "https://tapita.io/pb/graphql/";
-const integrationToken = "14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444";
+// const integrationToken = "14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444";
+const integrationToken = "150kG2pgFhmxb6zJVJFSyTAV4oAV1JXc1623205870";
 
 const MESSAGES = new Map()
     .set(
@@ -30,16 +31,8 @@ const MagentoRoute = () => {
         endPoint,
         integrationToken
     });
-    const {formatMessage: _formatMessage} = useIntl();
+    const {formatMessage} = useIntl();
 
-    const formatMessage = ({id, val, defaultMessage}) => {
-        const msg = id || val || defaultMessage
-        if (msg) {
-            return _formatMessage({id: msg, defaultMessage: val})
-        } else {
-            return val
-        }
-    }
     const talonProps = useMagentoRoute();
     const {
         component: RootComponent,
@@ -82,7 +75,7 @@ const MagentoRoute = () => {
         }
         return (
             <ErrorView
-                message={_formatMessage({
+                message={formatMessage({
                     id: 'magentoRoute.routeError',
                     defaultMessage: MESSAGES.get('NOT_FOUND')
                 })}
@@ -92,7 +85,7 @@ const MagentoRoute = () => {
 
     return (
         <ErrorView
-            message={_formatMessage({
+            message={formatMessage({
                 id: 'magentoRoute.internalError',
                 defaultMessage: MESSAGES.get('INTERNAL_ERROR')
             })}
