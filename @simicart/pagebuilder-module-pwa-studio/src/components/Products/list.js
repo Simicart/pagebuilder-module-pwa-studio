@@ -1,12 +1,12 @@
 import React from 'react';
-import { useProducts } from '../../hooks/useProducts';
+import {useProducts} from '../../hooks/useProducts';
 import GalleryItem from '@magento/venia-ui/lib/components/Gallery/item';
 import defaultClasses from './list.css';
-import { mergeClasses } from '@magento/venia-ui/lib/classify';
+import {mergeClasses} from '@magento/venia-ui/lib/classify';
 import LoadingIndicator from '@magento/venia-ui/lib/components/LoadingIndicator';
 
 const mapGalleryItem = item => {
-    const { small_image } = item;
+    const {small_image} = item;
     return {
         ...item,
         small_image:
@@ -15,12 +15,12 @@ const mapGalleryItem = item => {
 };
 
 const ProductList = props => {
-    const { item } = props;
-    let filterData = { category_id: { eq: '6' } };
+    const {item, formatMessage} = props;
+    let filterData = {category_id: {eq: '6'}};
     let sortData;
     let pageSize = 12;
     if (item.dataParsed) {
-        const { dataParsed } = item;
+        const {dataParsed} = item;
         if (dataParsed.openProductsWidthSKUs) {
             let openProductsWidthSKUs = item.dataParsed.openProductsWidthSKUs;
             openProductsWidthSKUs = openProductsWidthSKUs.trim();
@@ -31,7 +31,7 @@ const ProductList = props => {
                 }
             }
         } else if (dataParsed.openCategoryProducts) {
-            filterData = { category_id: { eq: String(dataParsed.openCategoryProducts) } };
+            filterData = {category_id: {eq: String(dataParsed.openCategoryProducts)}};
         }
         if (dataParsed.openProductsWidthSortAtt) {
             const directionToSort = dataParsed.openProductsWidthSortDir ? dataParsed.openProductsWidthSortDir.toUpperCase() : 'ASC';
@@ -43,11 +43,13 @@ const ProductList = props => {
         }
     }
 
-    const { data, loading } = useProducts({ filterData, sortData, pageSize });
+    const {data, loading} = useProducts({filterData, sortData, pageSize});
     const classes = mergeClasses(defaultClasses, props.classes);
+
     if (data && data.products && data.products.items && data.products.items.length) {
+        const name = formatMessage({val: item.name})
         return (
-            <div style={{ display: 'flex', flexWrap: 'wrap', overflow: 'hidden' }}>
+            <div style={{display: 'flex', flexWrap: 'wrap', overflow: 'hidden'}}>
                 <div
                     style={{
                         display: 'flex',
@@ -56,7 +58,7 @@ const ProductList = props => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    {item.name}
+                    {name}
                 </div>
                 <div
                     style={{
@@ -68,14 +70,15 @@ const ProductList = props => {
                 >
                     {
                         data.products.items.map((productItem, indx) => {
-                            return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes} />
+                            return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes}
+                                                formatMessage={formatMessage}/>
                         })}
 
                 </div>
             </div>
         )
     } else if (loading) {
-        return <LoadingIndicator />
+        return <LoadingIndicator/>
     }
     return ''
 }

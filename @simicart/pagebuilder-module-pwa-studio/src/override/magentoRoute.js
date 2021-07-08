@@ -1,11 +1,11 @@
-import React, { useEffect } from 'react';
-import { useIntl } from 'react-intl';
-import { useMagentoRoute } from '@magento/peregrine/lib/talons/MagentoRoute';
+import React, {useEffect} from 'react';
+import {useIntl} from 'react-intl';
+import {useMagentoRoute} from '@magento/peregrine/lib/talons/MagentoRoute';
 
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
-import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
-import { useLocation } from 'src/drivers';
-import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
+import {fullPageLoadingIndicator} from '@magento/venia-ui/lib/components/LoadingIndicator';
+import {useLocation} from 'src/drivers';
+import {usePbFinder, PageBuilderComponent} from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 
@@ -30,7 +30,16 @@ const MagentoRoute = () => {
         endPoint,
         integrationToken
     });
-    const { formatMessage } = useIntl();
+    const {formatMessage: _formatMessage} = useIntl();
+
+    const formatMessage = ({id, val, defaultMessage}) => {
+        const msg = id || val || defaultMessage
+        if (msg) {
+            return _formatMessage({id: msg, defaultMessage: val})
+        } else {
+            return val
+        }
+    }
     const talonProps = useMagentoRoute();
     const {
         component: RootComponent,
@@ -54,6 +63,7 @@ const MagentoRoute = () => {
             maskedId={pageMaskedId}
             ProductList={ProductList}
             ProductGrid={ProductGrid}
+            formatMessage={formatMessage}
         />
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
@@ -65,14 +75,14 @@ const MagentoRoute = () => {
         if (!pageMaskedId && location && location.pathname && location.pathname === '/') {
             return fullPageLoadingIndicator;
         }
-        return <RootComponent id={id} />;
+        return <RootComponent id={id}/>;
     } else if (isNotFound) {
         if (!pageMaskedId && location && location.pathname) {
             return fullPageLoadingIndicator;
         }
         return (
             <ErrorView
-                message={formatMessage({
+                message={_formatMessage({
                     id: 'magentoRoute.routeError',
                     defaultMessage: MESSAGES.get('NOT_FOUND')
                 })}
@@ -82,7 +92,7 @@ const MagentoRoute = () => {
 
     return (
         <ErrorView
-            message={formatMessage({
+            message={_formatMessage({
                 id: 'magentoRoute.internalError',
                 defaultMessage: MESSAGES.get('INTERNAL_ERROR')
             })}

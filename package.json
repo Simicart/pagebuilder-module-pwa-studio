@@ -15,6 +15,7 @@
     "clean": "rimraf dist",
     "download-schema": "graphql get-schema --project pagebuilderdemo --insecure",
     "lint": "eslint --ignore-path .gitignore 'src/**/{*.js,package.json}'",
+    "lint:fix": "eslint --fix --ignore-path .gitignore 'src/**/{*.js,package.json}'",
     "prettier": "prettier --loglevel warn --ignore-path .gitignore 'src/**/*.@(css|graphql|js)' '*.js'",
     "prettier:check": "yarn run -s prettier -- --check",
     "prettier:fix": "yarn run -s prettier -- --write",
