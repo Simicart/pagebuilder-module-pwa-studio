@@ -8,10 +8,13 @@ import {useLocation} from 'src/drivers';
 import {usePbFinder, PageBuilderComponent} from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
+import Category from '../components/Category';
+import { BrowserPersistence } from '@magento/peregrine/lib/util';
+const storage = new BrowserPersistence();
+const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
-const endPoint = "https://tapita.io/pb/graphql/";
-// const integrationToken = "14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444";
-const integrationToken = "150kG2pgFhmxb6zJVJFSyTAV4oAV1JXc1623205870";
+const endPoint = 'https://tapita.io/pb/graphql/';
+const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
 
 const MESSAGES = new Map()
     .set(
@@ -26,10 +29,13 @@ const MagentoRoute = () => {
         loading: pbLoading,
         pageMaskedId,
         findPage,
-        pathToFind
+        pathToFind,
+        pageData
     } = usePbFinder({
         endPoint,
-        integrationToken
+        integrationToken,
+        storeCode,
+        getPageItems: true
     });
     const {formatMessage} = useIntl();
 
@@ -43,29 +49,56 @@ const MagentoRoute = () => {
     } = talonProps;
 
     useEffect(() => {
-        if (location && location.pathname && (isNotFound || location.pathname === '/')) {
-            if (!pageMaskedId || (location.pathname !== pathToFind))
+        if (
+            location &&
+            location.pathname &&
+            (isNotFound || location.pathname === '/')
+        ) {
+            if (!pageMaskedId || location.pathname !== pathToFind)
                 findPage(location.pathname);
         }
     }, [location, pageMaskedId, isNotFound, pathToFind, findPage]);
 
-    if (pageMaskedId && pageMaskedId !== 'notfound' && (isNotFound || location.pathname === '/')) {
-        return <PageBuilderComponent
-            key={pageMaskedId}
-            endPoint={endPoint}
-            maskedId={pageMaskedId}
-            ProductList={ProductList}
-            ProductGrid={ProductGrid}
-            formatMessage={formatMessage}
-        />
+    if (
+        pageMaskedId &&
+        pageMaskedId !== 'notfound' &&
+        (isNotFound || location.pathname === '/')
+    ) {
+        try {
+            document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = 'unset';
+        } catch (err) {
+            console.warn(err);
+        }
+        return (
+            <PageBuilderComponent
+                key={pageMaskedId}
+                endPoint={endPoint}
+                maskedId={pageMaskedId}
+                pageData={pageData && pageData.publish_items ? pageData : false}
+                ProductList={ProductList}
+                ProductGrid={ProductGrid}
+                Category={Category}
+                formatMessage={formatMessage}
+            />
+        );
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
+    }
+    try {
+        document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = '1440px';
+    } catch (err) {
+        console.warn(err);
     }
 
     if (isLoading || isRedirect) {
         return fullPageLoadingIndicator;
     } else if (RootComponent) {
-        if (!pageMaskedId && location && location.pathname && location.pathname === '/') {
+        if (
+            !pageMaskedId &&
+            location &&
+            location.pathname &&
+            location.pathname === '/'
+        ) {
             return fullPageLoadingIndicator;
         }
         return <RootComponent id={id}/>;
