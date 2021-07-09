@@ -12997,10 +12997,10 @@ signal-exit@^3.0.0, signal-exit@^3.0.2:
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.3.tgz#a1410c2edd8f077b08b4e253c8eacfcaf057461c"
   integrity sha512-VUJ49FC8U1OxwZLxIbTTrDvLnf/6TDgxZcK8wxR8zs13xpx7xbG60ndBlhNrFi2EMuFRoeDoJO7wthSLq42EjA==
 
-simi-pagebuilder-react@^1.1.7:
-  version "1.1.7"
-  resolved "https://registry.yarnpkg.com/simi-pagebuilder-react/-/simi-pagebuilder-react-1.1.7.tgz#ed5eca48f445e2163eb1ae3125e0d0445449d147"
-  integrity sha512-/AYajQdGphvLivwP7SPbcDLcrnbXnJS3/GieSuGh3ac61Ae1Svl6dWZZAnqBpH6JiF1phBPpH/cYc/uGvSx4SA==
+simi-pagebuilder-react@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/simi-pagebuilder-react/-/simi-pagebuilder-react-1.2.0.tgz#b6531df2258773d0bb8b838e9635e5714a38f631"
+  integrity sha512-/T1pE1gnaYM6eEoba0pBIl4ismEXt9IjdYZTplVG3eTt5K7uM32knCmKJ1Xlotvhm9cU8l/eU5G0qZpG6ELVQA==
   dependencies:
     react-helmet "^6.1.0"
     react-html-parser "^2.0.2"
