@@ -53,13 +53,5 @@ export const ProductScroll = (props) => {
         return <LoadingIndicator/>
     }
     return ''
-
-    // const {item} = props;
-    //
-    // return (
-    //     <div>
-    //         {JSON.stringify(item, null,2)}
-    //     </div>
-    // );
 };
 

@@ -1,30 +1,26 @@
 import React from 'react';
 import defaultClasses from './FashionableDotPagination.css';
+import {generateClass} from "../../utils/generateClass";
 
 export const SimpleDot = (props) => {
 	const { className = '', ...rest } = props || {};
+	const newClass = generateClass(defaultClasses, 'zmdi zmdi-circle','simple-grey-dot', className)
 
-	const newClassName = ['zmdi zmdi-circle', 'simple-grey-dot', className].join(
-		' ',
-	);
-
-	return <i className={`${newClassName} ${defaultClasses['simple-grey-dot']} ${defaultClasses[className]||''}`} {...rest} />;
+	return <i className={newClass} {...rest} />;
 };
 
 export const DotWithOrbital = (props) => {
 	const { className = '', ...rest } = props || {};
-	const newClassName = ['zmdi zmdi-dot-circle', 'orbital-dot', className].join(
-		' ',
-	);
+	const newClass = generateClass(defaultClasses, 'zmdi zmdi-dot-circle', 'orbital-dot', className);
 
-	return <i className={`${newClassName} ${defaultClasses['orbital-dot']}`} {...rest} />;
+	return <i className={newClass} {...rest} />;
 };
 
 export const HorizontalBar = (props) => {
 	const { className = '', ...rest } = props || {};
-	const newClassName = ['small-horizontal-bar', className].join(' ');
+	const newClassName = generateClass(defaultClasses, '','small-horizontal-bar', className)
 
-	return <i className={`${newClassName} ${defaultClasses['small-horizontal-bar']}`} {...rest} />;
+	return <i className={newClassName} {...rest} />;
 };
 
 export const FashionableDotPagination = (props) => {
@@ -45,11 +41,8 @@ export const FashionableDotPagination = (props) => {
 			/>
 		);
 	});
-    console.log(defaultClasses)
-
-
     return (
-		<div className={`${defaultClasses['fashionable-pagination-container']}`} style={pagingStyle}>
+		<div className={generateClass(defaultClasses, '', 'fashionable-pagination-container')} style={pagingStyle}>
 			<DotWithOrbital />
 			<HorizontalBar />
 			{pressableBits}

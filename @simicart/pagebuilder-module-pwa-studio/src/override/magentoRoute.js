@@ -11,6 +11,7 @@ import ProductGrid from '../components/Products/grid';
 import Category from '../components/Category';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
 import {ProductScroll} from "../components/Products/scroll";
+import {CategoryScroll} from "../components/Category/scroll";
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
@@ -80,6 +81,7 @@ const MagentoRoute = () => {
                 ProductList={ProductList}
                 ProductGrid={ProductGrid}
                 ProductScroll={ProductScroll}
+                CategoryScroll={CategoryScroll}
                 Category={Category}
                 formatMessage={formatMessage}
             />

@@ -5,6 +5,7 @@ export const GET_MEGA_MENU = gql`
         categoryList {
             id
             name
+            image
             children {
                 id
                 include_in_menu
@@ -12,6 +13,7 @@ export const GET_MEGA_MENU = gql`
                 position
                 url_path
                 url_suffix
+                image
                 children {
                     id
                     include_in_menu
@@ -19,6 +21,7 @@ export const GET_MEGA_MENU = gql`
                     position
                     url_path
                     url_suffix
+                    image
                     children {
                         id
                         include_in_menu
@@ -26,6 +29,7 @@ export const GET_MEGA_MENU = gql`
                         position
                         url_path
                         url_suffix
+                        image
                     }
                 }
             }

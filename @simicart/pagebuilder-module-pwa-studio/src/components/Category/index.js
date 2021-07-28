@@ -5,7 +5,7 @@ import { GET_MEGA_MENU } from './megaMenu.gql';
 import defaultClasses from './index.css';
 import { Link } from '@magento/venia-drivers';
 
-const recursiveFindCate = (cateArr, idToFind) => {
+export const recursiveFindCate = (cateArr, idToFind) => {
     let foundCate;
     cateArr.every(cateArrItm => {
         if (cateArrItm.id === idToFind) foundCate = cateArrItm;
