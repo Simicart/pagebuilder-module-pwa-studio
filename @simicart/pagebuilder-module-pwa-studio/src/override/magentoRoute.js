@@ -10,11 +10,12 @@ import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 import Category from '../components/Category';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
+import {ProductScroll} from "../components/Products/scroll";
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
 const endPoint = 'https://tapita.io/pb/graphql/';
-const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
+const integrationToken = '150kG2pgFhmxb6zJVJFSyTAV4oAV1JXc1623205870';
 
 const MESSAGES = new Map()
     .set(
@@ -70,6 +71,7 @@ const MagentoRoute = () => {
             console.warn(err);
         }
         return (
+            <React.Fragment>
             <PageBuilderComponent
                 key={pageMaskedId}
                 endPoint={endPoint}
@@ -77,9 +79,11 @@ const MagentoRoute = () => {
                 pageData={pageData && pageData.publish_items ? pageData : false}
                 ProductList={ProductList}
                 ProductGrid={ProductGrid}
+                ProductScroll={ProductScroll}
                 Category={Category}
                 formatMessage={formatMessage}
             />
+            </React.Fragment>
         );
     } else if (pbLoading) {
         return fullPageLoadingIndicator;

@@ -1,22 +1,14 @@
 import React from 'react';
-import {useProducts} from '../../hooks/useProducts';
-import GalleryItem from '@magento/venia-ui/lib/components/Gallery/item';
-import defaultClasses from './grid.css';
-import {mergeClasses} from '@magento/venia-ui/lib/classify';
-import LoadingIndicator from '@magento/venia-ui/lib/components/LoadingIndicator';
+import {useProducts} from "../../hooks/useProducts";
+import {mergeClasses} from "@magento/venia-ui/lib/classify";
+import defaultClasses from "./scroll.css";
+import GalleryItem from "@magento/venia-ui/lib/components/Gallery/item";
+import LoadingIndicator from "@magento/venia-ui/lib/components/LoadingIndicator";
+import {mapGalleryItem} from "./grid";
+import {CarefreeHorizontalScroll} from "../CarefreeHorizontalScroll/CarefreeHorizontalScroll";
 
-export const mapGalleryItem = item => {
-    const {small_image} = item;
-    return {
-        ...item,
-        small_image:
-            typeof small_image === 'object' ? small_image.url : small_image
-    };
-};
-
-const ProductGrid = props => {
-    const {item} = props
-
+export const ProductScroll = (props) => {
+    const {item} = props;
     let filterData = {category_id: {eq: '6'}};
     let sortData;
     let pageSize = 8;
@@ -46,14 +38,28 @@ const ProductGrid = props => {
 
     const {data, loading} = useProducts({filterData, sortData, pageSize});
     const classes = mergeClasses(defaultClasses, props.classes);
+
     if (data && data.products && data.products.items && data.products.items.length) {
-        return data.products.items.map((productItem, indx) => {
+        const products = data.products.items.map((productItem, indx) => {
             return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes}/>
         })
+
+        return (
+            <CarefreeHorizontalScroll item={item}>
+                {products}
+            </CarefreeHorizontalScroll>
+        )
     } else if (loading) {
         return <LoadingIndicator/>
     }
     return ''
-}
 
-export default ProductGrid;
+    // const {item} = props;
+    //
+    // return (
+    //     <div>
+    //         {JSON.stringify(item, null,2)}
+    //     </div>
+    // );
+};
+
