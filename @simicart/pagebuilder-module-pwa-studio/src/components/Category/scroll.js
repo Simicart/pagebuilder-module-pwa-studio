@@ -14,10 +14,14 @@ const imageStyle = {
     width: '100%',
 };
 
+const ROOT_ID = 2
+
 export const CategoryScroll = (props) => {
     const {item} = props;
 
     const {data, loading} = useQuery(GET_MEGA_MENU);
+
+
     console.log('kek', data)
     const classes = mergeClasses(defaultClasses, props.classes);
     const {dataParsed} = item;
@@ -32,17 +36,17 @@ export const CategoryScroll = (props) => {
         data.categoryList[0].children &&
         data.categoryList[0].children.length
     ) {
+        const parentId = parseInt(item.dataParsed.openCategoryProducts) || ROOT_ID
         const rootCate = data.categoryList[0];
         const classes = mergeClasses(defaultClasses, props.classes);
-        const idsToFind = item.dataParsed.openCategoryProducts
-            ? JSON.parse(item.dataParsed.openCategoryProducts) : []
-        const validIds = idsToFind.map(x => parseInt(x)).map(x => recursiveFindCate(rootCate.children, x))
-            .filter(x => !!x);
+        const cate = parentId === ROOT_ID ? rootCate : recursiveFindCate(rootCate.children, parentId)
+        const cateChildren = cate ? cate.children : []
 
-        const content = validIds.map((x, i) => {
-            // const imgLink = '/pub/media/catalog/product/cache/a3e2ee71b82106c18dca4419b53b8e60/v/a/va01-rn_main.jpg?auto=webp&format=pjpg&width=840&height=375&fit=cover'
-
+        const content = cateChildren.map((x, i) => {
             const imgLink = dataParsed.image || x.image || ''
+            if (!imgLink) {
+                return ''
+            }
             return (
                 <Link
                     className={classes.root}
@@ -64,12 +68,15 @@ export const CategoryScroll = (props) => {
             );
         })
 
+        const numberOfChildren = cateChildren.filter(x => !!(dataParsed.image || x.image || '')).length
+
         return (
             <CarefreeHorizontalScroll
                 item={item}
                 pagingStyle={{
                     marginTop: 5
                 }}
+                _numberOfChildren={numberOfChildren}
             >
                 {content}
             </CarefreeHorizontalScroll>
