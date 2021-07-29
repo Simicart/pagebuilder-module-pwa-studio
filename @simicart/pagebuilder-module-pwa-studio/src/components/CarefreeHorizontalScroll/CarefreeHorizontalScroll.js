@@ -19,6 +19,11 @@ export const CarefreeHorizontalScroll = (props) => {
         }
     };
 
+    const isPaginationBarVisible = !!(item.dataParsed &&
+    item.dataParsed['show-pagination'] !== undefined
+        ? item.dataParsed['show-pagination']
+        : true);
+
     useEffect(() => {
         const index = currentIndex;
         if (numberOfChildren <= 1) {
@@ -41,12 +46,14 @@ export const CarefreeHorizontalScroll = (props) => {
                     <div className={defaultClasses['title']}>{name}</div>
                     <div className={`${unqId} ${defaultClasses['child-container']}`}>{children}</div>
                 </div>
-                <FashionableDotPagination
-                    pagingStyle={pagingStyle}
-                    numberOfPages={_numberOfChildren !== undefined ? _numberOfChildren : numberOfChildren}
-                    currentIndex={currentIndex}
-                    onChangeIndex={handleScroll}
-                />
+                {isPaginationBarVisible && (
+                    <FashionableDotPagination
+                        pagingStyle={pagingStyle}
+                        numberOfPages={_numberOfChildren !== undefined ? _numberOfChildren : numberOfChildren}
+                        currentIndex={currentIndex}
+                        onChangeIndex={handleScroll}
+                    />
+                )}
             </div>
         </React.Fragment>
     );
