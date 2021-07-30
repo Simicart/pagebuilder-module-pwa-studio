@@ -31,21 +31,53 @@ export const FashionableDotPagination = (props) => {
 		pagingStyle = {},
 	} = props || {};
 
-	const pressableBits = [...Array(numberOfPages).keys()].map((x) => {
-		const onChangeIndex = () => _onChangeIndex(x);
-		return (
-			<SimpleDot
-				key={x.toString()}
-				className={x === currentIndex ? 'simple-grey-dot-active' : ''}
-				onClick={onChangeIndex}
-			/>
-		);
-	});
+    const content = [...Array(numberOfPages).keys()].map((x) => {
+        const onChangeIndex = () => _onChangeIndex(x);
+        if (currentIndex === x) {
+            if (currentIndex === 0) {
+                return (
+                    <React.Fragment>
+                        <DotWithOrbital />
+                        <HorizontalBar />
+                    </React.Fragment>
+                );
+            } else if (currentIndex === numberOfPages - 1) {
+                return (
+                    <React.Fragment>
+                        <HorizontalBar />
+                        <DotWithOrbital />
+                    </React.Fragment>
+                );
+            } else {
+                return (
+                    <React.Fragment>
+                        <HorizontalBar />
+                        <DotWithOrbital />
+                        <HorizontalBar />
+                    </React.Fragment>
+                );
+            }
+        } else {
+            return (
+                <SimpleDot
+                    key={x.toString()}
+                    className={x === currentIndex ? 'active' : ''}
+                    onClick={onChangeIndex}
+                />
+            );
+        }
+    });
+
+    if (numberOfPages === 0) {
+        return '';
+    }
+
+    const newClass = generateClass(defaultClasses, '','fashionable-pagination-container')
+
+
     return (
-		<div className={generateClass(defaultClasses, '', 'fashionable-pagination-container')} style={pagingStyle}>
-			<DotWithOrbital />
-			<HorizontalBar />
-			{pressableBits}
-		</div>
-	);
+        <div className={newClass} style={pagingStyle}>
+            {content}
+        </div>
+    );
 };
