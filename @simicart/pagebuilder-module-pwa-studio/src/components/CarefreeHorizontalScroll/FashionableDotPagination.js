@@ -72,8 +72,11 @@ export const FashionableDotPagination = (props) => {
         return '';
     }
 
+    const newClass = generateClass(defaultClasses, '','fashionable-pagination-container')
+
+
     return (
-        <div className={'fashionable-pagination-container'} style={pagingStyle}>
+        <div className={newClass} style={pagingStyle}>
             {content}
         </div>
     );
