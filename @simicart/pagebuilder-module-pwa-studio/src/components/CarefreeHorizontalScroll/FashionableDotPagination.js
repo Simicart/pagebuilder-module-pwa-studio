@@ -4,9 +4,9 @@ import {generateClass} from "../../utils/generateClass";
 
 export const SimpleDot = (props) => {
 	const { className = '', ...rest } = props || {};
-	const newClass = generateClass(defaultClasses, 'zmdi zmdi-circle','simple-grey-dot', className)
+	const newClass = generateClass(defaultClasses, '','simple-grey-dot', className)
 
-	return <i className={newClass} {...rest} />;
+	return <img className={newClass} src={require('./icon/dot.svg')} alt={''} {...rest} />;
 };
 
 export const DotWithOrbital = (props) => {
