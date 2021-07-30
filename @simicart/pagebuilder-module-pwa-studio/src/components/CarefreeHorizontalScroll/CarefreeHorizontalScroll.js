@@ -20,8 +20,8 @@ export const CarefreeHorizontalScroll = (props) => {
     };
 
     const isPaginationBarVisible = !!(item.dataParsed &&
-    item.dataParsed['show-pagination'] !== undefined
-        ? item.dataParsed['show-pagination']
+    item.dataParsed['showSliderIndicator'] !== undefined
+        ? item.dataParsed['showSliderIndicator']
         : true);
 
     useEffect(() => {
