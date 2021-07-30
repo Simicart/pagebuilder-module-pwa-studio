@@ -67,7 +67,8 @@ const MagentoRoute = () => {
         (isNotFound || location.pathname === '/')
     ) {
         try {
-            document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = 'unset';
+            if (document.getElementsByTagName('header')[0])
+                document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = 'unset';
         } catch (err) {
             console.warn(err);
         }
@@ -91,7 +92,8 @@ const MagentoRoute = () => {
         return fullPageLoadingIndicator;
     }
     try {
-        document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = '1440px';
+        if (document.getElementsByTagName('header')[0])
+            document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = '1440px';
     } catch (err) {
         console.warn(err);
     }

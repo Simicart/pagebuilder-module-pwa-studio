@@ -36,21 +36,21 @@ export const FashionableDotPagination = (props) => {
         if (currentIndex === x) {
             if (currentIndex === 0) {
                 return (
-                    <React.Fragment>
+                    <React.Fragment key={x}>
                         <DotWithOrbital />
                         <HorizontalBar />
                     </React.Fragment>
                 );
             } else if (currentIndex === numberOfPages - 1) {
                 return (
-                    <React.Fragment>
+                    <React.Fragment key={x}>
                         <HorizontalBar />
                         <DotWithOrbital />
                     </React.Fragment>
                 );
             } else {
                 return (
-                    <React.Fragment>
+                    <React.Fragment key={x}>
                         <HorizontalBar />
                         <DotWithOrbital />
                         <HorizontalBar />
@@ -60,7 +60,7 @@ export const FashionableDotPagination = (props) => {
         } else {
             return (
                 <SimpleDot
-                    key={x.toString()}
+                    key={x}
                     className={x === currentIndex ? 'active' : ''}
                     onClick={onChangeIndex}
                 />

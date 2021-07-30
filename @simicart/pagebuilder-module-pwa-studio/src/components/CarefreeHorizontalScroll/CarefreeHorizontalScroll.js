@@ -3,6 +3,8 @@ import {FashionableDotPagination} from './FashionableDotPagination';
 import {randomString} from "./randomString";
 import defaultClasses from './index.css';
 
+let slidedTheSlider = false;
+
 export const CarefreeHorizontalScroll = (props) => {
     const {item, children, pagingStyle, _numberOfChildren} = props || {};
     const {name = 'Hello'} = item;
@@ -26,6 +28,12 @@ export const CarefreeHorizontalScroll = (props) => {
 
     useEffect(() => {
         const index = currentIndex;
+        if (index === 0) {
+            if (!slidedTheSlider)
+                return;
+        } else
+            slidedTheSlider = true;
+            
         if (numberOfChildren <= 1) {
             // no where to scroll
         } else if (children[index]) {
