@@ -110,7 +110,7 @@
     "redux-actions": "~2.6.4",
     "redux-thunk": "~2.3.0",
     "rimraf": "~2.6.3",    
-    "simi-pagebuilder-react": "^1.2.5",
+    "simi-pagebuilder-react": "^1.2.6",
     "style-loader": "~2.0.0",
     "terser-webpack-plugin": "~1.2.3",
     "uuid": "~3.3.2",
