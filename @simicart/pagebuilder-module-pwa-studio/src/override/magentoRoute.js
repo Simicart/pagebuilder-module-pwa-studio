@@ -4,7 +4,7 @@ import {useMagentoRoute} from '@magento/peregrine/lib/talons/MagentoRoute';
 
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 import {fullPageLoadingIndicator} from '@magento/venia-ui/lib/components/LoadingIndicator';
-import {useLocation} from 'src/drivers';
+import {useLocation, Link, useHistory} from 'src/drivers';
 import {usePbFinder, PageBuilderComponent} from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
@@ -74,18 +74,20 @@ const MagentoRoute = () => {
         }
         return (
             <React.Fragment>
-            <PageBuilderComponent
-                key={pageMaskedId}
-                endPoint={endPoint}
-                maskedId={pageMaskedId}
-                pageData={pageData && pageData.publish_items ? pageData : false}
-                ProductList={ProductList}
-                ProductGrid={ProductGrid}
-                ProductScroll={ProductScroll}
-                CategoryScroll={CategoryScroll}
-                Category={Category}
-                formatMessage={formatMessage}
-            />
+                <PageBuilderComponent
+                    key={pageMaskedId}
+                    endPoint={endPoint}
+                    maskedId={pageMaskedId}
+                    pageData={pageData && pageData.publish_items ? pageData : false}
+                    ProductList={ProductList}
+                    ProductGrid={ProductGrid}
+                    ProductScroll={ProductScroll}
+                    CategoryScroll={CategoryScroll}
+                    Category={Category}
+                    formatMessage={formatMessage}
+                    Link={Link}
+                    history={history}
+                />
             </React.Fragment>
         );
     } else if (pbLoading) {
