@@ -22,7 +22,6 @@ export const CategoryScroll = (props) => {
     const {data, loading} = useQuery(GET_MEGA_MENU);
 
 
-    console.log('kek', data)
     const classes = mergeClasses(defaultClasses, props.classes);
     const {dataParsed} = item;
 
