@@ -4,7 +4,6 @@ import {mergeClasses} from "@magento/venia-ui/lib/classify";
 import defaultClasses from "./scroll.css";
 import GalleryItem from "@magento/venia-ui/lib/components/Gallery/item";
 import LoadingIndicator from "@magento/venia-ui/lib/components/LoadingIndicator";
-import {mapGalleryItem} from "./grid";
 import {CarefreeHorizontalScroll} from "../CarefreeHorizontalScroll/CarefreeHorizontalScroll";
 
 export const ProductScroll = (props) => {
@@ -41,7 +40,7 @@ export const ProductScroll = (props) => {
 
     if (data && data.products && data.products.items && data.products.items.length) {
         const products = data.products.items.map((productItem, indx) => {
-            return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes}/>
+            return <GalleryItem key={indx} item={productItem} classes={classes}/>
         })
 
         return (

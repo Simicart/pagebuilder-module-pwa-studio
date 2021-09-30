@@ -181,6 +181,7 @@ export const useProducts = props => {
         }
     )
     const { data, loading } = result;
+    console.log(data);
     return {
         data, loading
     }

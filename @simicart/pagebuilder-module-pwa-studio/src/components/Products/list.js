@@ -5,15 +5,6 @@ import defaultClasses from './list.css';
 import {mergeClasses} from '@magento/venia-ui/lib/classify';
 import LoadingIndicator from '@magento/venia-ui/lib/components/LoadingIndicator';
 
-const mapGalleryItem = item => {
-    const {small_image} = item;
-    return {
-        ...item,
-        small_image:
-            typeof small_image === 'object' ? small_image.url : small_image
-    };
-};
-
 const ProductList = props => {
     const {item, formatMessage} = props;
     let filterData = {category_id: {eq: '6'}};
@@ -70,7 +61,7 @@ const ProductList = props => {
                 >
                     {
                         data.products.items.map((productItem, indx) => {
-                            return <GalleryItem key={indx} item={mapGalleryItem(productItem)} classes={classes}
+                            return <GalleryItem key={indx} item={productItem} classes={classes}
                                                 formatMessage={formatMessage}/>
                         })}
 

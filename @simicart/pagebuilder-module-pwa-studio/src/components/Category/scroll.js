@@ -6,7 +6,7 @@ import {CarefreeHorizontalScroll} from "../CarefreeHorizontalScroll/CarefreeHori
 import {useQuery} from "@apollo/client";
 import {GET_MEGA_MENU} from "./megaMenu.gql";
 import {recursiveFindCate} from "./index";
-import {Link} from "@magento/venia-drivers";
+import { Link } from 'react-router-dom';
 
 const imageStyle = {
     display: 'block',

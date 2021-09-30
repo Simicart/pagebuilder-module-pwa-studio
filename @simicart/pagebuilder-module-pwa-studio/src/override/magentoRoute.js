@@ -1,17 +1,17 @@
-import React, {useEffect} from 'react';
-import {useIntl} from 'react-intl';
-import {useMagentoRoute} from '@magento/peregrine/lib/talons/MagentoRoute';
+import React, { useEffect } from 'react';
+import { useIntl } from 'react-intl';
+import { useMagentoRoute } from '@magento/peregrine/lib/talons/MagentoRoute';
 
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
-import {fullPageLoadingIndicator} from '@magento/venia-ui/lib/components/LoadingIndicator';
-import {useLocation, Link, useHistory} from 'src/drivers';
-import {usePbFinder, PageBuilderComponent} from 'simi-pagebuilder-react';
+import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
+import { useLocation, Link, useHistory } from 'react-router-dom';
+import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 import Category from '../components/Category';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
-import {ProductScroll} from "../components/Products/scroll";
-import {CategoryScroll} from "../components/Category/scroll";
+import { ProductScroll } from '../components/Products/scroll';
+import { CategoryScroll } from '../components/Category/scroll';
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
@@ -39,7 +39,7 @@ const MagentoRoute = () => {
         storeCode,
         getPageItems: true
     });
-    const {formatMessage} = useIntl();
+    const { formatMessage } = useIntl();
 
     const talonProps = useMagentoRoute();
     const {
@@ -68,7 +68,9 @@ const MagentoRoute = () => {
     ) {
         try {
             if (document.getElementsByTagName('header')[0])
-                document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = 'unset';
+                document.getElementsByTagName(
+                    'header'
+                )[0].nextSibling.style.maxWidth = 'unset';
         } catch (err) {
             console.warn(err);
         }
@@ -78,7 +80,9 @@ const MagentoRoute = () => {
                     key={pageMaskedId}
                     endPoint={endPoint}
                     maskedId={pageMaskedId}
-                    pageData={pageData && pageData.publish_items ? pageData : false}
+                    pageData={
+                        pageData && pageData.publish_items ? pageData : false
+                    }
                     ProductList={ProductList}
                     ProductGrid={ProductGrid}
                     ProductScroll={ProductScroll}
@@ -95,7 +99,9 @@ const MagentoRoute = () => {
     }
     try {
         if (document.getElementsByTagName('header')[0])
-            document.getElementsByTagName('header')[0].nextSibling.style.maxWidth = '1440px';
+            document.getElementsByTagName(
+                'header'
+            )[0].nextSibling.style.maxWidth = '1440px';
     } catch (err) {
         console.warn(err);
     }
@@ -111,7 +117,7 @@ const MagentoRoute = () => {
         ) {
             return fullPageLoadingIndicator;
         }
-        return <RootComponent id={id}/>;
+        return <RootComponent id={id} />;
     } else if (isNotFound) {
         if (!pageMaskedId && location && location.pathname) {
             return fullPageLoadingIndicator;
