@@ -47,24 +47,25 @@ const MagentoRoute = () => {
         id,
         isLoading,
         isNotFound,
-        isRedirect
+        isRedirect,
+        hasError
     } = talonProps;
 
     useEffect(() => {
         if (
             location &&
             location.pathname &&
-            (isNotFound || location.pathname === '/')
+            (isNotFound || hasError || location.pathname === '/')
         ) {
             if (!pageMaskedId || location.pathname !== pathToFind)
                 findPage(location.pathname);
         }
-    }, [location, pageMaskedId, isNotFound, pathToFind, findPage]);
+    }, [location, pageMaskedId, isNotFound, pathToFind, findPage, hasError]);
 
     if (
         pageMaskedId &&
         pageMaskedId !== 'notfound' &&
-        (isNotFound || location.pathname === '/')
+        (isNotFound || hasError || location.pathname === '/')
     ) {
         try {
             if (document.getElementsByTagName('header')[0])
