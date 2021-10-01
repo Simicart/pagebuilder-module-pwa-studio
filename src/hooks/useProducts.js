@@ -3,6 +3,7 @@ import { useQuery } from '@apollo/client';
 
 const ItemFragment = gql`
     fragment ItemFragment on ProductInterface {
+        __typename
         id
         name
         sku
@@ -121,8 +122,16 @@ const ItemFragment = gql`
         price_tiers {
             quantity
             final_price {
-            value
-            currency
+                value
+                currency
+            }
+        }
+        price_range {
+            maximum_price {
+                regular_price {
+                    currency
+                    value
+                }
             }
         }
         rating_summary
@@ -131,7 +140,7 @@ const ItemFragment = gql`
 `;
 
 const GET_PRODUCTS = gql`
-    query getProducts(
+    query getPbProducts(
         $pageSize: Int!
         $currentPage: Int!
         $filters: ProductAttributeFilterInput!
@@ -143,8 +152,10 @@ const GET_PRODUCTS = gql`
             filter: $filters
             sort: $sort
         ) {
+            __typename
             total_count
             items {
+                __typename
                 ...ItemFragment
             }
             page_info {
@@ -160,6 +171,11 @@ const GET_PRODUCTS = gql`
                 }
             }
         }
+        storeConfig {
+            id
+            product_url_suffix
+            magento_wishlist_general_is_enabled
+        }
     }
     ${ItemFragment}
 `;
@@ -171,18 +187,15 @@ export const useProducts = props => {
         pageSize: pageSize ? pageSize : 12,
         filters: filterData
     };
-    if (sortData)
-        variables.sort = sortData;
-    const result = useQuery(
-        GET_PRODUCTS,
-        {
-            variables,
-            fetchPolicy: 'cache-and-network'
-        }
-    )
+    if (sortData) variables.sort = sortData;
+    const result = useQuery(GET_PRODUCTS, {
+        variables,
+        fetchPolicy: 'cache-and-network'
+    });
     const { data, loading } = result;
-    console.log(data);
     return {
-        data, loading
-    }
-}
+        data,
+        loading,
+        storeConfig: data && data.storeConfig ? data.storeConfig : false
+    };
+};
