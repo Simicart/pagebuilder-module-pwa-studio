@@ -6,6 +6,7 @@ import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
 import { useLocation, Link, useHistory } from 'react-router-dom';
 import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
+import ProductDetails from '../components/ProductDetails';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 import Category from '../components/Category';
@@ -15,8 +16,9 @@ import { CategoryScroll } from '../components/Category/scroll';
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
-const endPoint = 'https://tapita.io/pb/graphql/';
-const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
+const endPoint = 'https://magento24.pwa-commerce.com/pb/graphql/';
+//const endPoint = 'https://tapita.io/pb/graphql/';
+const integrationToken = '2xBXodtu16OPOKsWKcxA3riSeDkRpDL1622517111';
 
 const MESSAGES = new Map()
     .set(
@@ -27,18 +29,19 @@ const MESSAGES = new Map()
 
 const MagentoRoute = () => {
     const location = useLocation();
+    const pbFinderProps = usePbFinder({
+        endPoint,
+        integrationToken,
+        storeCode
+    });
     const {
         loading: pbLoading,
         pageMaskedId,
         findPage,
         pathToFind,
+        catalogItemIdToFind,
         pageData
-    } = usePbFinder({
-        endPoint,
-        integrationToken,
-        storeCode,
-        getPageItems: true
-    });
+    } = pbFinderProps;
     const { formatMessage } = useIntl();
 
     const talonProps = useMagentoRoute();
@@ -48,11 +51,14 @@ const MagentoRoute = () => {
         isLoading,
         isNotFound,
         isRedirect,
-        hasError
+        hasError,
+        type
     } = talonProps;
 
     useEffect(() => {
-        if (
+        if (type === 'PRODUCT' && id) {
+            if (catalogItemIdToFind !== id) findPage(false, id);
+        } else if (
             location &&
             location.pathname &&
             (isNotFound || hasError || location.pathname === '/')
@@ -60,12 +66,23 @@ const MagentoRoute = () => {
             if (!pageMaskedId || location.pathname !== pathToFind)
                 findPage(location.pathname);
         }
-    }, [location, pageMaskedId, isNotFound, pathToFind, findPage, hasError]);
+    }, [
+        location,
+        pageMaskedId,
+        isNotFound,
+        pathToFind,
+        catalogItemIdToFind,
+        findPage,
+        hasError
+    ]);
 
     if (
         pageMaskedId &&
         pageMaskedId !== 'notfound' &&
-        (isNotFound || hasError || location.pathname === '/')
+        (isNotFound ||
+            hasError ||
+            location.pathname === '/' ||
+            type === 'PRODUCT')
     ) {
         try {
             if (document.getElementsByTagName('header')[0])
@@ -75,24 +92,28 @@ const MagentoRoute = () => {
         } catch (err) {
             console.warn(err);
         }
+        const pbcProps = {
+            pageData: pageData && pageData.publish_items ? pageData : false,
+            ProductList: ProductList,
+            ProductGrid: ProductGrid,
+            ProductScroll: ProductScroll,
+            CategoryScroll: CategoryScroll,
+            Category: Category,
+            formatMessage: formatMessage,
+            Link: Link,
+            history: history
+        };
         return (
             <React.Fragment>
-                <PageBuilderComponent
-                    key={pageMaskedId}
-                    endPoint={endPoint}
-                    maskedId={pageMaskedId}
-                    pageData={
-                        pageData && pageData.publish_items ? pageData : false
-                    }
-                    ProductList={ProductList}
-                    ProductGrid={ProductGrid}
-                    ProductScroll={ProductScroll}
-                    CategoryScroll={CategoryScroll}
-                    Category={Category}
-                    formatMessage={formatMessage}
-                    Link={Link}
-                    history={history}
-                />
+                {type === 'PRODUCT' ? (
+                    <ProductDetails productId={id} {...pbcProps} />
+                ) : (
+                    <PageBuilderComponent
+                        key={pageMaskedId}
+                        endPoint={endPoint}
+                        {...pbcProps}
+                    />
+                )}
             </React.Fragment>
         );
     } else if (pbLoading) {
