@@ -23,6 +23,7 @@ import RichText from '@magento/venia-ui/lib/components/RichText';
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css';
 import customClasses from './productFullDetail.css';
 import ReactDOM from 'react-dom';
+import { useWindowSize } from '@magento/peregrine';
 
 const WishlistButton = React.lazy(() =>
     import('@magento/venia-ui/lib/components/Wishlist/AddToListButton')
@@ -47,7 +48,7 @@ const ERROR_FIELD_TO_MESSAGE_MAPPING = {
 
 const ProductFullDetail = props => {
     const { product, pbProps } = props;
-
+    const windowSize = useWindowSize();
     const talonProps = useProductFullDetail({ product });
 
     const {
