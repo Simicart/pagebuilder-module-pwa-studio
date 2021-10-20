@@ -29,6 +29,7 @@ const MESSAGES = new Map()
 
 const MagentoRoute = () => {
     const location = useLocation();
+    const history = useHistory();
     const pbFinderProps = usePbFinder({
         endPoint,
         integrationToken,
@@ -101,7 +102,8 @@ const MagentoRoute = () => {
             Category: Category,
             formatMessage: formatMessage,
             Link: Link,
-            history: history
+            history: history,
+            lazyloadPlaceHolder: <div />
         };
         return (
             <React.Fragment>

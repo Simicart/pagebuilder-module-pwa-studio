@@ -1,4 +1,4 @@
-import React, { Fragment, Suspense } from 'react';
+import React, { Fragment, Suspense, useCallback, useMemo } from 'react';
 import { PageBuilderComponent } from 'simi-pagebuilder-react';
 import mapProduct from '@magento/venia-ui/lib/util/mapProduct';
 import { useProduct } from '@magento/peregrine/lib/talons/RootComponents/Product/useProduct';
@@ -21,6 +21,8 @@ import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/Loadi
 import { QuantityFields } from '@magento/venia-ui/lib/components/CartPage/ProductListing/quantity';
 import RichText from '@magento/venia-ui/lib/components/RichText';
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css';
+import customClasses from './productFullDetail.css';
+import ReactDOM from 'react-dom';
 
 const WishlistButton = React.lazy(() =>
     import('@magento/venia-ui/lib/components/Wishlist/AddToListButton')
@@ -61,23 +63,25 @@ const ProductFullDetail = props => {
     } = talonProps;
     const { formatMessage } = useIntl();
 
-    const classes = useStyle(defaultClasses, props.classes);
+    const classes = useStyle(customClasses, defaultClasses, props.classes);
 
     const options = isProductConfigurable(product) ? (
-        <Suspense fallback={fullPageLoadingIndicator}>
-            <Options
-                onSelectionChange={handleSelectionChange}
-                options={product.configurable_options}
-            />
-        </Suspense>
-    ) : null;
-
-    const breadcrumbs = breadcrumbCategoryId ? (
-        <Breadcrumbs
-            categoryId={breadcrumbCategoryId}
-            currentProduct={productDetails.name}
+        <Options
+            onSelectionChange={handleSelectionChange}
+            options={product.configurable_options}
         />
     ) : null;
+
+    const breadcrumbs = useMemo(
+        () =>
+            breadcrumbCategoryId ? (
+                <Breadcrumbs
+                    categoryId={breadcrumbCategoryId}
+                    currentProduct={productDetails.name}
+                />
+            ) : null,
+        [breadcrumbCategoryId]
+    );
 
     // Fill a map with field/section -> error.
     const errors = new Map();
@@ -133,28 +137,8 @@ const ProductFullDetail = props => {
         }
     }
 
-    const cartActionContent = isSupportedProductType ? (
-        <Button disabled={isAddToCartDisabled} priority="high" type="submit">
-            <FormattedMessage
-                id={'productFullDetail.cartAction'}
-                defaultMessage={'Add to Cart'}
-            />
-        </Button>
-    ) : (
-        <div className={classes.unavailableContainer}>
-            <Info />
-            <p>
-                <FormattedMessage
-                    id={'productFullDetail.unavailableProduct'}
-                    defaultMessage={
-                        'This product is currently unavailable for purchase.'
-                    }
-                />
-            </p>
-        </div>
-    );
-
     const overRender = (item, itemProps, innerContent) => {
+        if (!item || !itemProps || !productDetails) return false;
         const { type } = item;
         if (type === 'productbuilder_productname') {
             return (
@@ -163,8 +147,10 @@ const ProductFullDetail = props => {
                 </h1>
             );
         } else if (type === 'productbuilder_productprice') {
+            let priceProps = JSON.parse(JSON.stringify(itemProps));
+            if (priceProps.style) priceProps.style.flexDirection = 'row';
             return (
-                <p className={classes.productPrice} {...itemProps}>
+                <p className={classes.productPrice} {...priceProps}>
                     <Price
                         currencyCode={productDetails.price.currency}
                         value={productDetails.price.value}
@@ -176,24 +162,15 @@ const ProductFullDetail = props => {
         } else if (type === 'productbuilder_productimage') {
             let imageProps = JSON.parse(JSON.stringify(itemProps));
             if (imageProps.style) imageProps.style.overflowX = 'hidden';
-            return (
-                <div {...itemProps}>
-                    <Carousel images={mediaGalleryEntries} />
-                </div>
-            );
+            return <div {...itemProps} id="smpb-product-image-wrapper" />;
         } else if (type === 'productbuilder_productaddcart') {
             return (
-                <Button
-                    disabled={isAddToCartDisabled}
-                    priority="high"
-                    type="submit"
-                    {...itemProps}
-                >
+                <button {...itemProps} type="submit">
                     <FormattedMessage
                         id={'productFullDetail.cartAction'}
                         defaultMessage={'Add to Cart'}
                     />
-                </Button>
+                </button>
             );
         } else if (type === 'productbuilder_productaddwishlist') {
             return (
@@ -213,9 +190,11 @@ const ProductFullDetail = props => {
             );
         } else if (type === 'productbuilder_productoptions') {
             return (
-                <div className={classes.options} {...itemProps}>
-                    {options}
-                </div>
+                <div
+                    className={classes.options}
+                    {...itemProps}
+                    id="smpb-product-options-wrapper"
+                />
             );
         } else if (type === 'productbuilder_productdesc') {
             return (
@@ -226,7 +205,37 @@ const ProductFullDetail = props => {
         } else if (type === 'productbuilder_productbreadcrumb') {
             return <div {...itemProps}>{breadcrumbs}</div>;
         } else if (type === 'productbuilder_productattribute') {
-            return <div {...itemProps}>{item.name}</div>;
+            if (item.name) {
+                let attributeString = item.name;
+                attributeString = attributeString.substring(
+                    attributeString.indexOf('{{') + 2,
+                    attributeString.lastIndexOf('}}')
+                );
+                let attributeVal;
+                if (attributeString.includes('.')) {
+                    try {
+                        const attributepaths = attributeString.split('.');
+                        if (attributepaths && attributepaths.length) {
+                            attributeVal = productDetails;
+                            attributepaths.map(attributepath => {
+                                if (attributeVal[attributepath])
+                                    attributeVal = attributeVal[attributepath];
+                            });
+                        }
+                    } catch (err) {
+                        console.warn(err);
+                    }
+                }
+                if (attributeVal && typeof attributeVal !== 'object')
+                    return (
+                        <div {...itemProps}>
+                            {item.name.replace(
+                                '{{' + attributeString + '}}',
+                                attributeVal
+                            )}
+                        </div>
+                    );
+            }
         } else if (type === 'productbuilder_productreview') {
             return <></>;
         } else if (type === 'productbuilder_relatedproducts') {
@@ -234,7 +243,7 @@ const ProductFullDetail = props => {
         }
         return false;
     };
-
+    
     return (
         <Fragment>
             {product ? (
@@ -245,29 +254,35 @@ const ProductFullDetail = props => {
                         }}
                         errors={errors.get('form') || []}
                     />
-                    {/*
-                <section className={classes.actions}>
-                    {cartActionContent}
-                    <Suspense fallback={null}>
-                        <WishlistButton {...wishlistButtonProps} />
-                    </Suspense>
-                </section>
-                <section className={classes.details}>
-                    <h2 className={classes.detailsTitle}>
-                        <FormattedMessage
-                            id={'global.sku'}
-                            defaultMessage={'SKU'}
-                        />
-                    </h2>
-                    <strong>{productDetails.sku}</strong>
-                </section>
-                */}
                     <div style={{ width: '100%', minWidth: '100vw' }}>
-                        <PageBuilderComponent
-                            {...pbProps}
-                            overRender={overRender}
-                        />
+                        {useMemo(
+                            () => (
+                                <PageBuilderComponent
+                                    {...pbProps}
+                                    overRender={overRender}
+                                />
+                            ),
+                            [product]
+                        )}
                     </div>
+                    {document.getElementById('smpb-product-options-wrapper') ? (
+                        <>
+                            {ReactDOM.createPortal(
+                                options,
+                                document.getElementById(
+                                    'smpb-product-options-wrapper'
+                                )
+                            )}
+                            {ReactDOM.createPortal(
+                                <Carousel images={mediaGalleryEntries} />,
+                                document.getElementById(
+                                    'smpb-product-image-wrapper'
+                                )
+                            )}
+                        </>
+                    ) : (
+                        ''
+                    )}
                 </Form>
             ) : (
                 ''
