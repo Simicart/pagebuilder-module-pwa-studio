@@ -21,9 +21,12 @@ import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/Loadi
 import { QuantityFields } from '@magento/venia-ui/lib/components/CartPage/ProductListing/quantity';
 import RichText from '@magento/venia-ui/lib/components/RichText';
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css';
+
 import customClasses from './productFullDetail.css';
 import ReactDOM from 'react-dom';
 import { useWindowSize } from '@magento/peregrine';
+import operations from './product.gql';
+import Rate from './Rate';
 
 const WishlistButton = React.lazy(() =>
     import('@magento/venia-ui/lib/components/Wishlist/AddToListButton')
@@ -138,6 +141,7 @@ const ProductFullDetail = props => {
         }
     }
 
+    const pDetails = JSON.parse(JSON.stringify(product));
     const overRender = (item, itemProps, innerContent) => {
         if (!item || !itemProps || !productDetails) return false;
         const { type } = item;
@@ -159,7 +163,16 @@ const ProductFullDetail = props => {
                 </p>
             );
         } else if (type === 'productbuilder_productstock') {
-            return ' ';
+            if (pDetails && pDetails.stock_status) {
+                return (
+                    <div {...itemProps}>
+                        {pDetails.stock_status === 'IN_STOCK'
+                            ? formatMessage({ id: 'In Stock' })
+                            : formatMessage({ id: 'Out Of Stock' })}
+                    </div>
+                );
+            }
+            return '';
         } else if (type === 'productbuilder_productimage') {
             let imageProps = JSON.parse(JSON.stringify(itemProps));
             if (imageProps.style) imageProps.style.overflowX = 'hidden';
@@ -217,7 +230,7 @@ const ProductFullDetail = props => {
                     try {
                         const attributepaths = attributeString.split('.');
                         if (attributepaths && attributepaths.length) {
-                            attributeVal = productDetails;
+                            attributeVal = pDetails;
                             attributepaths.map(attributepath => {
                                 if (attributeVal[attributepath])
                                     attributeVal = attributeVal[attributepath];
@@ -238,13 +251,42 @@ const ProductFullDetail = props => {
                     );
             }
         } else if (type === 'productbuilder_productreview') {
+            if (pDetails && pDetails.rating_summary)
+                return (
+                    <div {...itemProps}>
+                        <Rate rate={pDetails.rating_summary} />
+                    </div>
+                );
             return <></>;
         } else if (type === 'productbuilder_relatedproducts') {
+            if (
+                pDetails &&
+                pDetails.related_products &&
+                pDetails.related_products.length &&
+                pbProps &&
+                pbProps.ProductGrid
+            ) {
+                const { ProductGrid } = pbProps;
+                let skus = pDetails.related_products.map(relatedP => {
+                    return relatedP.sku;
+                });
+                return (
+                    <div {...itemProps}>
+                        <ProductGrid
+                            item={{
+                                dataParsed: {
+                                    openProductsWidthSKUs: skus.join(',')
+                                }
+                            }}
+                        />
+                    </div>
+                );
+            }
             return <></>;
         }
         return false;
     };
-    
+
     return (
         <Fragment>
             {product ? (
@@ -294,7 +336,8 @@ const ProductFullDetail = props => {
 
 const ProductDetails = props => {
     const talonProps = useProduct({
-        mapProduct
+        mapProduct,
+        operations
     });
     const { error, loading, product } = talonProps;
     if (loading && !product) return fullPageLoadingIndicator;
