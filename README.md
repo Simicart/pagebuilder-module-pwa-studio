@@ -19,7 +19,7 @@ Modify the dependencies of your project
   "@simicart/pagebuilder-module-pwa-studio": "link:./@simicart/pagebuilder-module-pwa-studio"
 },
 "devDependencies": {
-    "simi-pagebuilder-react": "^1.3.0",
+    "simi-pagebuilder-react": "^1.3.3",
     ...
 },
 ```

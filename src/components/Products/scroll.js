@@ -60,7 +60,7 @@ export const ProductScroll = props => {
         });
 
         return (
-            <CarefreeHorizontalScroll item={item}>
+            <CarefreeHorizontalScroll item={item} pagingStyle={{marginTop: 10}}>
                 {products}
             </CarefreeHorizontalScroll>
         );
