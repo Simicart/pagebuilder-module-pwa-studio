@@ -66,14 +66,16 @@ const ProductList = props => {
         }
     };
     useEffect(() => {
-        const ctnWidth = document.getElementById(unqId).offsetWidth;
-        let galleryItemWidth;
-        if (ctnWidth.children && ctnWidth.children[0])
-            galleryItemWidth = ctnWidth.children[0].offsetWidth;
-        if (!galleryItemWidth) {
-            galleryItemWidth = ctnWidth / 3;
+        if (document.getElementById(unqId)) {
+            const ctnWidth = document.getElementById(unqId).offsetWidth;
+            let galleryItemWidth;
+            if (ctnWidth.children && ctnWidth.children[0])
+                galleryItemWidth = ctnWidth.children[0].offsetWidth;
+            if (!galleryItemWidth) {
+                galleryItemWidth = ctnWidth / 3;
+            }
+            maxSteps = parseInt(ctnWidth / galleryItemWidth) - 1;
         }
-        maxSteps = parseInt(ctnWidth / galleryItemWidth) - 1;
     });
 
     useEffect(() => {
