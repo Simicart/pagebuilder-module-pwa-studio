@@ -1,12 +1,19 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useProducts } from '../../hooks/useProducts';
 import GalleryItem from '@magento/venia-ui/lib/components/Gallery/item';
 import defaultClasses from './list.css';
 import { mergeClasses } from '@magento/venia-ui/lib/classify';
 import LoadingIndicator from '@magento/venia-ui/lib/components/LoadingIndicator';
 
+import { ChevronLeft, ChevronRight } from 'react-feather';
+
+let slidedTheSlider = false;
+let maxSteps = 1;
+
 const ProductList = props => {
     const { item, formatMessage } = props;
+    const unqId = 'smpb-productlist-' + item.entity_id;
+    const [currentStep, setCurrentStep] = useState(0);
     let filterData = { category_id: { eq: '6' } };
     let sortData;
     let pageSize = 12;
@@ -45,6 +52,37 @@ const ProductList = props => {
     });
     const classes = mergeClasses(defaultClasses, props.classes);
 
+    const scrollToIndex = index => {
+        if (
+            data &&
+            data.products &&
+            data.products.items &&
+            data.products.items.length &&
+            data.products.items[index]
+        ) {
+            const elements = document.getElementById(unqId).children;
+            const target = elements.item(index);
+            target.scrollIntoView({ block: 'nearest', inline: 'start' });
+        }
+    };
+    useEffect(() => {
+        const ctnWidth = document.getElementById(unqId).offsetWidth;
+        let galleryItemWidth;
+        if (ctnWidth.children && ctnWidth.children[0])
+            galleryItemWidth = ctnWidth.children[0].offsetWidth;
+        if (!galleryItemWidth) {
+            galleryItemWidth = ctnWidth / 3;
+        }
+        maxSteps = parseInt(ctnWidth / galleryItemWidth) - 1;
+    });
+
+    useEffect(() => {
+        if (currentStep === 0) {
+            if (!slidedTheSlider) return;
+        } else slidedTheSlider = true;
+        scrollToIndex(currentStep);
+    }, [currentStep]);
+
     if (
         data &&
         data.products &&
@@ -53,7 +91,6 @@ const ProductList = props => {
         storeConfig
     ) {
         const name = formatMessage({ val: item.name });
-        console.log(storeConfig)
         return (
             <div
                 style={{
@@ -61,6 +98,7 @@ const ProductList = props => {
                     flexWrap: 'wrap',
                     overflow: 'hidden'
                 }}
+                className={classes.smpbProductListWrapper}
             >
                 <div
                     style={{
@@ -79,6 +117,8 @@ const ProductList = props => {
                         flexWrap: 'nowrap',
                         overflow: 'auto'
                     }}
+                    className={classes.smpbProductListCtn}
+                    id={unqId}
                 >
                     {data.products.items.map((productItem, indx) => {
                         return (
@@ -91,6 +131,28 @@ const ProductList = props => {
                             />
                         );
                     })}
+                </div>
+                <div className={classes.scrollNavCtn}>
+                    <div
+                        className={currentStep === 0 && classes.navDisabled}
+                        onClick={() => {
+                            if (currentStep > 0)
+                                setCurrentStep(currentStep - 1);
+                        }}
+                    >
+                        <ChevronLeft size={24} />
+                    </div>
+                    <div
+                        className={
+                            currentStep >= maxSteps && classes.navDisabled
+                        }
+                        onClick={() => {
+                            if (currentStep < maxSteps)
+                                setCurrentStep(currentStep + 1);
+                        }}
+                    >
+                        <ChevronRight size={24} />
+                    </div>
                 </div>
             </div>
         );
