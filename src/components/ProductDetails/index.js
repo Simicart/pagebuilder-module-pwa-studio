@@ -21,6 +21,7 @@ import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/Loadi
 import { QuantityFields } from '@magento/venia-ui/lib/components/CartPage/ProductListing/quantity';
 import RichText from '@magento/venia-ui/lib/components/RichText';
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css';
+import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 
 import customClasses from './productFullDetail.css';
 import ReactDOM from 'react-dom';
@@ -179,7 +180,13 @@ const ProductFullDetail = props => {
             return <div {...itemProps} id="smpb-product-image-wrapper" />;
         } else if (type === 'productbuilder_productaddcart') {
             return (
-                <button {...itemProps} type="submit">
+                <button
+                    {...itemProps}
+                    type="submit"
+                    className={`${itemProps.className} ${
+                        classes.smpbAddCartBtn
+                    }`}
+                >
                     <FormattedMessage
                         id={'productFullDetail.cartAction'}
                         defaultMessage={'Add to Cart'}
@@ -251,10 +258,20 @@ const ProductFullDetail = props => {
                     );
             }
         } else if (type === 'productbuilder_productreview') {
+            let reviewProps = JSON.parse(JSON.stringify(itemProps));
+            if (reviewProps.style) reviewProps.style.flexDirection = 'row';
             if (pDetails && pDetails.rating_summary)
                 return (
-                    <div {...itemProps}>
-                        <Rate rate={pDetails.rating_summary} />
+                    <div {...reviewProps}>
+                        <Rate
+                            rate={pDetails.rating_summary}
+                            review_count={pDetails.review_count}
+                        />
+                        {pDetails.review_count && (
+                            <span style={{ marginInlineStart: 4 }}>
+                                ({pDetails.review_count})
+                            </span>
+                        )}
                     </div>
                 );
             return <></>;
@@ -288,7 +305,11 @@ const ProductFullDetail = props => {
     };
 
     return (
-        <Fragment>
+        <div
+            className={`${classes.smProductBuilderRoot} ${
+                isAddToCartDisabled ? classes.addToCartDisabled : ''
+            }`}
+        >
             {product ? (
                 <Form className={classes.root} onSubmit={handleAddToCart}>
                     <FormError
@@ -330,7 +351,7 @@ const ProductFullDetail = props => {
             ) : (
                 ''
             )}
-        </Fragment>
+        </div>
     );
 };
 

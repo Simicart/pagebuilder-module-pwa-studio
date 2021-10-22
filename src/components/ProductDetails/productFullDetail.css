@@ -1,0 +1,12 @@
+.smProductBuilderRoot h3 {
+    font-size: 1rem !important;
+    font-weight: 600 !important;
+    line-height: 1.5 !important;
+    margin-bottom: 1.5rem !important;
+}
+.smProductBuilderRoot .smpbAddCartBtn:hover {
+    opacity: 0.8;
+}
+.smProductBuilderRoot.addToCartDisabled .smpbAddCartBtn {
+    opacity: 0.3;
+}

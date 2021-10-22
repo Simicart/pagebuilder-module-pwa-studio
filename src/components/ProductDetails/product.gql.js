@@ -10,11 +10,18 @@ export const GET_PRODUCT_DETAIL_QUERY = gql`
                 id
                 rating_summary
                 stock_status
+                short_description {
+                    html
+                }
+                only_x_left_in_stock
+                review_count
                 related_products {
                     id
                     sku
-                    name
-                    url_key
+                }
+                upsell_products {
+                    id
+                    sku
                 }
                 ...ProductDetailsFragment
             }
