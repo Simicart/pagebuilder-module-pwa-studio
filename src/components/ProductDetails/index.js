@@ -13,6 +13,7 @@ import ProductFullDetail from './ProductFullDetail';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
+let requestedPbPages = false;
 
 const ProductDetails = props => {
     const { pbcProps, pbFinderProps } = props;
@@ -27,6 +28,13 @@ const ProductDetails = props => {
         findPage,
         allPages
     } = pbFinderProps;
+
+    useEffect(() => {
+        if (!pbLoading && !allPages && !requestedPbPages) {
+            requestedPbPages = true;
+            findPage();
+        }
+    }, [pbLoading, allPages]);
 
     let foudThepage = useMemo(() => {
         if (
@@ -114,10 +122,6 @@ const ProductDetails = props => {
                 return pbPages[0];
         }
     }, [allPages, product]);
-
-    useEffect(() => {
-        if (!pbLoading && !allPages) findPage();
-    }, [pbLoading, allPages]);
 
     if (loading && !product) return fullPageLoadingIndicator;
     if (error && !product) return <ErrorView />;
