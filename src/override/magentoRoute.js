@@ -10,9 +10,9 @@ import ProductDetails from '../components/ProductDetails';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
 import Category from '../components/Category';
-import { BrowserPersistence } from '@magento/peregrine/lib/util';
 import { ProductScroll } from '../components/Products/scroll';
 import { CategoryScroll } from '../components/Category/scroll';
+import { BrowserPersistence } from '@magento/peregrine/lib/util';
 const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
@@ -35,15 +35,25 @@ const MagentoRoute = () => {
         integrationToken,
         storeCode
     });
+    const { formatMessage } = useIntl();
     const {
         loading: pbLoading,
         pageMaskedId,
         findPage,
         pathToFind,
-        catalogItemIdToFind,
         pageData
     } = pbFinderProps;
-    const { formatMessage } = useIntl();
+    const pbcProps = {
+        ProductList: ProductList,
+        ProductGrid: ProductGrid,
+        ProductScroll: ProductScroll,
+        CategoryScroll: CategoryScroll,
+        Category: Category,
+        formatMessage: formatMessage,
+        Link: Link,
+        history: history,
+        lazyloadPlaceHolder: <div />
+    };
 
     const talonProps = useMagentoRoute();
     const {
@@ -57,9 +67,7 @@ const MagentoRoute = () => {
     } = talonProps;
 
     useEffect(() => {
-        if (type === 'PRODUCT' && id) {
-            if (catalogItemIdToFind !== id) findPage(false, id);
-        } else if (
+        if (
             location &&
             location.pathname &&
             (isNotFound || hasError || location.pathname === '/')
@@ -67,56 +75,21 @@ const MagentoRoute = () => {
             if (!pageMaskedId || location.pathname !== pathToFind)
                 findPage(location.pathname);
         }
-    }, [
-        location,
-        pageMaskedId,
-        isNotFound,
-        pathToFind,
-        catalogItemIdToFind,
-        findPage,
-        hasError
-    ]);
+    }, [location, pageMaskedId, isNotFound, pathToFind, findPage, hasError]);
 
     if (
         pageMaskedId &&
         pageMaskedId !== 'notfound' &&
-        (isNotFound ||
-            hasError ||
-            location.pathname === '/' ||
-            type === 'PRODUCT')
+        (isNotFound || hasError || location.pathname === '/')
     ) {
-        try {
-            if (document.getElementsByTagName('header')[0])
-                document.getElementsByTagName(
-                    'header'
-                )[0].nextSibling.style.maxWidth = 'unset';
-        } catch (err) {
-            console.warn(err);
-        }
-        const pbcProps = {
-            pageData: pageData && pageData.publish_items ? pageData : false,
-            ProductList: ProductList,
-            ProductGrid: ProductGrid,
-            ProductScroll: ProductScroll,
-            CategoryScroll: CategoryScroll,
-            Category: Category,
-            formatMessage: formatMessage,
-            Link: Link,
-            history: history,
-            lazyloadPlaceHolder: <div />
-        };
+        smRemoveMaxWidthOnMain();
         return (
-            <React.Fragment>
-                {type === 'PRODUCT' ? (
-                    <ProductDetails productId={id} {...pbcProps} />
-                ) : (
-                    <PageBuilderComponent
-                        key={pageMaskedId}
-                        endPoint={endPoint}
-                        {...pbcProps}
-                    />
-                )}
-            </React.Fragment>
+            <PageBuilderComponent
+                {...pbcProps}
+                key={pageMaskedId}
+                endPoint={endPoint}
+                pageData={pageData && pageData.publish_items ? pageData : false}
+            />
         );
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
@@ -141,6 +114,18 @@ const MagentoRoute = () => {
         ) {
             return fullPageLoadingIndicator;
         }
+        if (type === 'PRODUCT') {
+            smRemoveMaxWidthOnMain();
+            return (
+                <ProductDetails
+                    id={id}
+                    productId={id}
+                    pbcProps={pbcProps}
+                    pbFinderProps={pbFinderProps}
+                />
+            );
+        }
+
         return <RootComponent id={id} />;
     } else if (isNotFound) {
         if (!pageMaskedId && location && location.pathname) {
@@ -167,3 +152,15 @@ const MagentoRoute = () => {
 };
 
 export default MagentoRoute;
+
+
+const smRemoveMaxWidthOnMain = () => {
+    try {
+        if (document.getElementsByTagName('header')[0])
+            document.getElementsByTagName(
+                'header'
+            )[0].nextSibling.style.maxWidth = 'unset';
+    } catch (err) {
+        console.warn(err);
+    }
+}

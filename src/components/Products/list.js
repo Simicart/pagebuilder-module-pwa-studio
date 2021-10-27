@@ -136,7 +136,7 @@ const ProductList = props => {
                 </div>
                 <div className={classes.scrollNavCtn}>
                     <div
-                        className={currentStep === 0 && classes.navDisabled}
+                        className={currentStep === 0 ? classes.navDisabled : ''}
                         onClick={() => {
                             if (currentStep > 0)
                                 setCurrentStep(currentStep - 1);
@@ -146,7 +146,7 @@ const ProductList = props => {
                     </div>
                     <div
                         className={
-                            currentStep >= maxSteps && classes.navDisabled
+                            currentStep >= maxSteps ? classes.navDisabled : ''
                         }
                         onClick={() => {
                             if (currentStep < maxSteps)
