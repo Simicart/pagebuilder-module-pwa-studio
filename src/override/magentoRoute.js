@@ -17,7 +17,7 @@ const storage = new BrowserPersistence();
 const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
 const endPoint = 'https://tapita.io/pb/graphql/';
-const integrationToken = '2xBXodtu16OPOKsWKcxA3riSeDkRpDL1622517111';
+const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
 
 const MESSAGES = new Map()
     .set(
