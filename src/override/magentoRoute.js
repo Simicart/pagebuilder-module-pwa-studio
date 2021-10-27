@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
 import { useIntl } from 'react-intl';
 import { useMagentoRoute } from '@magento/peregrine/lib/talons/MagentoRoute';
-
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
+
 import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
 import { useLocation, Link, useHistory } from 'react-router-dom';
 import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
@@ -58,12 +58,17 @@ const MagentoRoute = () => {
     const talonProps = useMagentoRoute();
     const {
         component: RootComponent,
-        id,
         isLoading,
         isNotFound,
         isRedirect,
+        shimmer,
+        initial,
+        ...componentData
+    } = talonProps;
+
+    const {
         hasError,
-        type
+        type,
     } = talonProps;
 
     useEffect(() => {
@@ -118,15 +123,14 @@ const MagentoRoute = () => {
             smRemoveMaxWidthOnMain();
             return (
                 <ProductDetails
-                    id={id}
-                    productId={id}
+                    {...componentData}
                     pbcProps={pbcProps}
                     pbFinderProps={pbFinderProps}
                 />
             );
         }
 
-        return <RootComponent id={id} />;
+        return <RootComponent {...componentData} />;
     } else if (isNotFound) {
         if (!pageMaskedId && location && location.pathname) {
             return fullPageLoadingIndicator;

@@ -11,7 +11,8 @@ import Carousel from '@magento/venia-ui/lib/components/ProductImageCarousel';
 import FormError from '@magento/venia-ui/lib/components/FormError';
 import { QuantityFields } from '@magento/venia-ui/lib/components/CartPage/ProductListing/quantity';
 import RichText from '@magento/venia-ui/lib/components/RichText';
-import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css';
+//import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css'; // pwa-studio 11 and sooner
+import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.module.css'; // pwa-studio 12 and later
 
 import customClasses from './productFullDetail.css';
 import ReactDOM from 'react-dom';
@@ -49,6 +50,7 @@ const ProductFullDetail = props => {
         errorMessage,
         handleAddToCart,
         handleSelectionChange,
+        isOutOfStock,
         isAddToCartDisabled,
         isSupportedProductType,
         mediaGalleryEntries,
@@ -66,16 +68,12 @@ const ProductFullDetail = props => {
         />
     ) : null;
 
-    const breadcrumbs = useMemo(
-        () =>
-            breadcrumbCategoryId ? (
-                <Breadcrumbs
-                    categoryId={breadcrumbCategoryId}
-                    currentProduct={productDetails.name}
-                />
-            ) : null,
-        [breadcrumbCategoryId]
-    );
+    const breadcrumbs = breadcrumbCategoryId ? (
+        <Breadcrumbs
+            categoryId={breadcrumbCategoryId}
+            currentProduct={productDetails.name}
+        />
+    ) : null;
 
     // Fill a map with field/section -> error.
     const errors = new Map();
@@ -296,7 +294,7 @@ const ProductFullDetail = props => {
     return (
         <div
             className={`${classes.smProductBuilderRoot} ${
-                isAddToCartDisabled ? classes.addToCartDisabled : ''
+                (isAddToCartDisabled || isOutOfStock) ? classes.addToCartDisabled : ''
             }`}
         >
             {product ? (
