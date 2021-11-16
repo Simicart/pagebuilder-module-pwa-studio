@@ -91,6 +91,8 @@ const ProductDetails = props => {
                             if (matchTheCate) return true;
                         }
                     }
+                } else {
+                    return true;
                 }
                 return false;
             });
@@ -151,7 +153,6 @@ const ProductDetails = props => {
             ) : (
                 <DefaultProductFullDetails
                     product={product}
-                    pbProps={pbcProps}
                 />
             )}
         </React.Fragment>

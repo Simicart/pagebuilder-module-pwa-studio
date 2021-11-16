@@ -310,6 +310,7 @@ const ProductFullDetail = props => {
                             () => (
                                 <PageBuilderComponent
                                     {...pbProps}
+                                    lazyloadPlaceHolder={null}
                                     pageData={pageData}
                                     overRender={overRender}
                                 />
