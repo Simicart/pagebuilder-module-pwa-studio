@@ -33,24 +33,27 @@ Option 2. If you clone magento pwa from github (https://github.com/magento/pwa-s
 },
 ```
 Install and start project:
-
 ```
 yarn install && yarn run watch
 ```
 
 ## To Integrate your key
-
-Open the file at
-
+1. You have to create an account at Tapita.io
+2. Sync your Magento site to Tapita
+3. Copy Integration Token 
+![alt text](https://tapita.io/wp-content/uploads/2021/11/Screenshot-6.png)
+4. Open the file at
 ```
   src/override/magentoRoute.js
 ```
-
-And change the value at this line:
+5. And change the value at this line:
 ```
   const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
 ```
 to your integration key and re-run the watch command.
+```
+yarn run watch
+```
 
 ## To Develop
 
