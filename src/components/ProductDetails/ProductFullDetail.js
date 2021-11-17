@@ -1,5 +1,5 @@
 import React, { useMemo } from 'react';
-import { PageBuilderComponent } from 'simi-pagebuilder-react';
+import PageBuilderComponent from '../PageBuilderComponent';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Form } from 'informed';
 import Price from '@magento/venia-ui/lib/components/Price';

@@ -5,7 +5,8 @@ import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 
 import { fullPageLoadingIndicator } from '@magento/venia-ui/lib/components/LoadingIndicator';
 import { useLocation, Link, useHistory } from 'react-router-dom';
-import { usePbFinder, PageBuilderComponent } from 'simi-pagebuilder-react';
+import { usePbFinder } from 'simi-pagebuilder-react';
+import PageBuilderComponent from '../components/PageBuilderComponent';
 import ProductDetails from '../components/ProductDetails';
 import ProductList from '../components/Products/list';
 import ProductGrid from '../components/Products/grid';
@@ -87,7 +88,6 @@ const MagentoRoute = () => {
         pageMaskedId !== 'notfound' &&
         (isNotFound || hasError || location.pathname === '/')
     ) {
-        smRemoveMaxWidthOnMain();
         return (
             <PageBuilderComponent
                 {...pbcProps}
@@ -99,15 +99,7 @@ const MagentoRoute = () => {
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
     }
-    try {
-        if (document.getElementsByTagName('header')[0])
-            document.getElementsByTagName(
-                'header'
-            )[0].nextSibling.style.maxWidth = '1440px';
-    } catch (err) {
-        console.warn(err);
-    }
-
+    
     if (isLoading || isRedirect) {
         return fullPageLoadingIndicator;
     } else if (RootComponent) {
@@ -120,7 +112,6 @@ const MagentoRoute = () => {
             return fullPageLoadingIndicator;
         }
         if (type === 'PRODUCT') {
-            smRemoveMaxWidthOnMain();
             return (
                 <ProductDetails
                     {...componentData}
@@ -156,15 +147,3 @@ const MagentoRoute = () => {
 };
 
 export default MagentoRoute;
-
-
-const smRemoveMaxWidthOnMain = () => {
-    try {
-        if (document.getElementsByTagName('header')[0])
-            document.getElementsByTagName(
-                'header'
-            )[0].nextSibling.style.maxWidth = 'unset';
-    } catch (err) {
-        console.warn(err);
-    }
-}

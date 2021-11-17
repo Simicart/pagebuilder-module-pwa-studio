@@ -1,3 +1,6 @@
+.smProductBuilderRoot > form {
+    padding: 0;
+}
 .smProductBuilderRoot h3 {
     font-size: 1rem !important;
     font-weight: 600 !important;
