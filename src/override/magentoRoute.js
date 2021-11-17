@@ -102,6 +102,7 @@ const MagentoRoute = () => {
         return (
             <PageBuilderComponent
                 {...pbcProps}
+                key={pageMaskedId}
                 maskedId={pageMaskedId}
                 pageData={pageData && pageData.publish_items ? pageData : false}
             />
