@@ -9,6 +9,7 @@ import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
 import operations from './product.gql';
 import { default as DefaultProductFullDetails } from '@magento/venia-ui/lib/components/ProductFullDetail';
 
+import { useLocation, Link, useHistory } from 'react-router-dom';
 import ProductFullDetail from './ProductFullDetail';
 import { BrowserPersistence } from '@magento/peregrine/lib/util';
 const storage = new BrowserPersistence();
@@ -17,17 +18,14 @@ let requestedPbPages = false;
 
 const ProductDetails = props => {
     const { pbcProps, pbFinderProps } = props;
+    const location = useLocation();
     const talonProps = useProduct({
         mapProduct,
         operations
     });
 
     const { error, loading, product } = talonProps;
-    const {
-        loading: pbLoading,
-        findPage,
-        allPages
-    } = pbFinderProps;
+    const { loading: pbLoading, findPage, allPages } = pbFinderProps;
 
     useEffect(() => {
         if (!pbLoading && !allPages && !requestedPbPages) {
@@ -96,32 +94,32 @@ const ProductDetails = props => {
                 }
                 return false;
             });
-            pbPages.sort(
-                (el1, el2) => {
-                    if (el1.apply_by) {
-                        if (el2.apply_by) {
-                            //if equal, then compare priority below
-                            if (el2.apply_by !== el1.apply_by) {
-                                //if not equal, SKU > product type > category ids
-                                const valueTable = {
-                                    'product_sku': 5,
-                                    'product_type': 4,
-                                    'category_id': 3,
-                                }
-                                return valueTable[el2.apply_by] - valueTable[el1.apply_by]
-                            }
-                        } else {
-                            //if one has and one does not have apply_by, then use the one with apply_by
-                            return -1;
+            pbPages.sort((el1, el2) => {
+                if (el1.apply_by) {
+                    if (el2.apply_by) {
+                        //if equal, then compare priority below
+                        if (el2.apply_by !== el1.apply_by) {
+                            //if not equal, SKU > product type > category ids
+                            const valueTable = {
+                                product_sku: 5,
+                                product_type: 4,
+                                category_id: 3
+                            };
+                            return (
+                                valueTable[el2.apply_by] -
+                                valueTable[el1.apply_by]
+                            );
                         }
-                    } else if (el2.apply_by) {
-                        return 1;
+                    } else {
+                        //if one has and one does not have apply_by, then use the one with apply_by
+                        return -1;
                     }
-                    return parseInt(el2.priority) - parseInt(el1.priority)
+                } else if (el2.apply_by) {
+                    return 1;
                 }
-            );
-            if (pbPages.length && pbPages[0])
-                return pbPages[0];
+                return parseInt(el2.priority) - parseInt(el1.priority);
+            });
+            if (pbPages.length && pbPages[0]) return pbPages[0];
         }
     }, [allPages, product]);
 
@@ -140,20 +138,31 @@ const ProductDetails = props => {
         );
     }
     if (pbLoading) return fullPageLoadingIndicator;
+
+    //handle when preview - onsite
+    let pageMaskedId;
+    if (location && location.search) {
+        const previewMID = location.search.indexOf('pbPreviewMaskedId=');
+        if (previewMID !== -1) {
+            pageMaskedId = location.search.substring(previewMID + 18);
+            if(foudThepage)
+                foudThepage = false;
+        }
+    }
+
     return (
         <React.Fragment>
             <StoreTitle>{product.name}</StoreTitle>
             <Meta name="description" content={product.meta_description} />{' '}
-            {foudThepage ? (
+            {foudThepage || pageMaskedId ? (
                 <ProductFullDetail
                     product={product}
                     pbProps={pbcProps}
                     pageData={foudThepage}
+                    maskedId={pageMaskedId}
                 />
             ) : (
-                <DefaultProductFullDetails
-                    product={product}
-                />
+                <DefaultProductFullDetails product={product} />
             )}
         </React.Fragment>
     );

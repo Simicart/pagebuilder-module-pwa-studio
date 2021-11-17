@@ -39,11 +39,12 @@ const MagentoRoute = () => {
     const { formatMessage } = useIntl();
     const {
         loading: pbLoading,
-        pageMaskedId,
         findPage,
-        pathToFind,
-        pageData
+        pathToFind
     } = pbFinderProps;
+    let { pageMaskedId, pageData } = pbFinderProps;
+
+    
     const pbcProps = {
         ProductList: ProductList,
         ProductGrid: ProductGrid,
@@ -53,8 +54,18 @@ const MagentoRoute = () => {
         formatMessage: formatMessage,
         Link: Link,
         history: history,
+        endPoint,
         lazyloadPlaceHolder: <div />
     };
+    //handle when preview - onsite
+    if (location && location.search) {
+        const previewMID = location.search.indexOf("pbPreviewMaskedId=");
+        if (previewMID !== -1) {
+            pageMaskedId = location.search.substring(previewMID + 18);
+            pageData = false;
+            pbcProps.toPreview = true;
+        }
+    }
 
     const talonProps = useMagentoRoute();
     const {
@@ -91,8 +102,7 @@ const MagentoRoute = () => {
         return (
             <PageBuilderComponent
                 {...pbcProps}
-                key={pageMaskedId}
-                endPoint={endPoint}
+                maskedId={pageMaskedId}
                 pageData={pageData && pageData.publish_items ? pageData : false}
             />
         );

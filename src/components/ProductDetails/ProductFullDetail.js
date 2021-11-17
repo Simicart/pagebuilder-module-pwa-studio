@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PageBuilderComponent from '../PageBuilderComponent';
 import { FormattedMessage, useIntl } from 'react-intl';
 import { Form } from 'informed';
@@ -41,9 +41,18 @@ const ERROR_FIELD_TO_MESSAGE_MAPPING = {
 };
 
 const ProductFullDetail = props => {
-    const { product, pbProps, pageData } = props;
+    const { product, pbProps, pageData, maskedId } = props;
     const windowSize = useWindowSize();
     const talonProps = useProductFullDetail({ product });
+    const [forceRerender, setForceRerender] = useState(0);
+    useEffect(() => {
+        //when preview - need sometime to get page info to preview -> need time to refresh
+        if (maskedId) {
+            setTimeout(() => {
+                setForceRerender(forceRerender + 1);
+            }, 2000)
+        }
+    }, [])
 
     const {
         breadcrumbCategoryId,
@@ -311,8 +320,10 @@ const ProductFullDetail = props => {
                                 <PageBuilderComponent
                                     {...pbProps}
                                     lazyloadPlaceHolder={null}
+                                    maskedId={maskedId}
                                     pageData={pageData}
                                     overRender={overRender}
+                                    toPreview={maskedId ? true : false}
                                 />
                             ),
                             [product]
