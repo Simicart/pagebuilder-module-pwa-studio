@@ -50,9 +50,23 @@ const ProductFullDetail = props => {
         if (maskedId) {
             setTimeout(() => {
                 setForceRerender(forceRerender + 1);
-            }, 2000)
+            }, 2000);
         }
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        //fix the carousel height lower than its children
+        try {
+            let carouselChild = document.querySelector(
+                '#smpb-product-image-wrapper > div > div'
+            );
+            if (carouselChild && carouselChild.offsetHeight) {
+                document.getElementById(
+                    'smpb-product-image-wrapper'
+                ).style.minHeight = carouselChild.offsetHeight + 15 + 'px';
+            }
+        } catch (err) {}
+    });
 
     const {
         breadcrumbCategoryId,
@@ -303,7 +317,9 @@ const ProductFullDetail = props => {
     return (
         <div
             className={`${classes.smProductBuilderRoot} ${
-                (isAddToCartDisabled || isOutOfStock) ? classes.addToCartDisabled : ''
+                isAddToCartDisabled || isOutOfStock
+                    ? classes.addToCartDisabled
+                    : ''
             }`}
         >
             {product ? (
