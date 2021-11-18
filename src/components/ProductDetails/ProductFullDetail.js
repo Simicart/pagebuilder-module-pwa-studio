@@ -10,9 +10,9 @@ import Breadcrumbs from '@magento/venia-ui/lib/components/Breadcrumbs';
 import Carousel from '@magento/venia-ui/lib/components/ProductImageCarousel';
 import FormError from '@magento/venia-ui/lib/components/FormError';
 import { QuantityFields } from '@magento/venia-ui/lib/components/CartPage/ProductListing/quantity';
-import RichText from '@magento/venia-ui/lib/components/RichText';
 //import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.css'; // pwa-studio 11 and sooner
 import defaultClasses from '@magento/venia-ui/lib/components/ProductFullDetail/productFullDetail.module.css'; // pwa-studio 12 and later
+import RichContent from '@magento/venia-ui/lib/components/RichContent/richContent';
 
 import customClasses from './productFullDetail.css';
 import ReactDOM from 'react-dom';
@@ -230,7 +230,7 @@ const ProductFullDetail = props => {
         } else if (type === 'productbuilder_productdesc') {
             return (
                 <div {...itemProps}>
-                    <RichText content={productDetails.description} />
+                    <RichContent html={productDetails.description} />
                 </div>
             );
         } else if (type === 'productbuilder_productbreadcrumb') {
@@ -260,10 +260,10 @@ const ProductFullDetail = props => {
                 if (attributeVal && typeof attributeVal !== 'object')
                     return (
                         <div {...itemProps}>
-                            {item.name.replace(
-                                '{{' + attributeString + '}}',
-                                attributeVal
-                            )}
+                            <RichContent html={item.name.replace(
+                                    '{{' + attributeString + '}}',
+                                    attributeVal
+                                )} />
                         </div>
                     );
             }
