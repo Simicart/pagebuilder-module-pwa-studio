@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useIntl } from 'react-intl';
 import { useMagentoRoute } from '@magento/peregrine/lib/talons/MagentoRoute';
 import ErrorView from '@magento/venia-ui/lib/components/ErrorView';
@@ -19,7 +19,7 @@ const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
 //const endPoint = 'https://magento24.pwa-commerce.com/pb/graphql/';
 const endPoint = 'https://tapita.io/pb/graphql/';
-const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
+const integrationToken = '33p59hvSkxI0MpmV37HQWZjUx5ZZYhNg1629360101';
 
 const MESSAGES = new Map()
     .set(
@@ -37,14 +37,9 @@ const MagentoRoute = () => {
         storeCode
     });
     const { formatMessage } = useIntl();
-    const {
-        loading: pbLoading,
-        findPage,
-        pathToFind
-    } = pbFinderProps;
+    const { loading: pbLoading, findPage, pathToFind } = pbFinderProps;
     let { pageMaskedId, pageData } = pbFinderProps;
 
-    
     const pbcProps = {
         ProductList: ProductList,
         ProductGrid: ProductGrid,
@@ -59,7 +54,7 @@ const MagentoRoute = () => {
     };
     //handle when preview - onsite
     if (location && location.search) {
-        const previewMID = location.search.indexOf("pbPreviewMaskedId=");
+        const previewMID = location.search.indexOf('pbPreviewMaskedId=');
         if (previewMID !== -1) {
             pageMaskedId = location.search.substring(previewMID + 18);
             pageData = false;
@@ -78,10 +73,7 @@ const MagentoRoute = () => {
         ...componentData
     } = talonProps;
 
-    const {
-        hasError,
-        type,
-    } = talonProps;
+    const { hasError, type } = talonProps;
 
     useEffect(() => {
         if (
@@ -94,11 +86,7 @@ const MagentoRoute = () => {
         }
     }, [location, pageMaskedId, isNotFound, pathToFind, findPage, hasError]);
 
-    if (
-        pageMaskedId &&
-        pageMaskedId !== 'notfound' &&
-        (isNotFound || hasError || location.pathname === '/')
-    ) {
+    const renderPBcomponent = useMemo(() => {
         return (
             <PageBuilderComponent
                 {...pbcProps}
@@ -107,10 +95,18 @@ const MagentoRoute = () => {
                 pageData={pageData && pageData.publish_items ? pageData : false}
             />
         );
+    }, [pageMaskedId, pageData && pageData.publish_items]);
+
+    if (
+        pageMaskedId &&
+        pageMaskedId !== 'notfound' &&
+        (isNotFound || hasError || location.pathname === '/')
+    ) {
+        return renderPBcomponent;
     } else if (pbLoading) {
         return fullPageLoadingIndicator;
     }
-    
+
     if (isLoading || isRedirect) {
         return fullPageLoadingIndicator;
     } else if (RootComponent) {
