@@ -19,7 +19,7 @@ const storeCode = storage.getItem('store_view_code') || STORE_VIEW_CODE;
 
 //const endPoint = 'https://magento24.pwa-commerce.com/pb/graphql/';
 const endPoint = 'https://tapita.io/pb/graphql/';
-const integrationToken = '33p59hvSkxI0MpmV37HQWZjUx5ZZYhNg1629360101';
+const integrationToken = '14FJiubdB8n3Byig2IkpfM6OiS6RTO801622446444';
 
 const MESSAGES = new Map()
     .set(
