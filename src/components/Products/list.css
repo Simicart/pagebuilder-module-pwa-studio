@@ -1,3 +1,7 @@
+.smpbProductListWrapper {
+    width: 100%;
+}
+
 .smpbProductListCtn::-webkit-scrollbar {
     display: none;
 }
@@ -33,7 +37,7 @@
         'items';
     grid-template-columns: 1fr;
     line-height: 1;
-    margin-right: 5rem;
+    margin-inline-end: 5rem;
 }
 
 .images {

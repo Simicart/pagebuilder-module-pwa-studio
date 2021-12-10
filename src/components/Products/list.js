@@ -51,6 +51,13 @@ const ProductList = props => {
         pageSize
     });
     const classes = mergeClasses(defaultClasses, props.classes);
+    const productCount =
+        data &&
+        data.products &&
+        data.products.items &&
+        data.products.items.length
+            ? data.products.items.length
+            : 0;
 
     const scrollToIndex = index => {
         if (
@@ -62,19 +69,32 @@ const ProductList = props => {
         ) {
             const elements = document.getElementById(unqId).children;
             const target = elements.item(index);
-            target.scrollIntoView({ block: 'nearest', inline: 'start' });
+            target.scrollIntoView({
+                behavior: 'smooth',
+                block: 'nearest',
+                inline: 'start'
+            });
         }
     };
     useEffect(() => {
         if (document.getElementById(unqId)) {
-            const ctnWidth = document.getElementById(unqId).offsetWidth;
+            const ctnEl = document.getElementById(unqId);
+            const ctnWidth = ctnEl.offsetWidth;
             let galleryItemWidth;
-            if (ctnWidth.children && ctnWidth.children[0])
-                galleryItemWidth = ctnWidth.children[0].offsetWidth;
+            if (ctnEl.children && ctnEl.children[0]) {
+                //margin inline end
+                galleryItemWidth = ctnEl.children[0].offsetWidth + 15;
+                try {
+                    const marginEnd = parseInt(
+                        ctnEl.children[0].style['margin-inline-end']
+                    );
+                    galleryItemWidth += marginEnd;
+                } catch (err) {}
+            }
             if (!galleryItemWidth) {
                 galleryItemWidth = ctnWidth / 3;
             }
-            maxSteps = parseInt(ctnWidth / galleryItemWidth) - 1;
+            maxSteps = productCount - parseInt(ctnWidth / galleryItemWidth) - 1;
         }
     });
 
@@ -85,20 +105,15 @@ const ProductList = props => {
         scrollToIndex(currentStep);
     }, [currentStep]);
 
-    if (
-        data &&
-        data.products &&
-        data.products.items &&
-        data.products.items.length &&
-        storeConfig
-    ) {
-        const name = formatMessage({ val: item.name });
+    if (productCount && storeConfig) {
+        const name = item.name ? formatMessage({ id: item.name }) : '';
         return (
             <div
                 style={{
                     display: 'flex',
                     flexWrap: 'wrap',
-                    overflow: 'hidden'
+                    overflow: 'hidden',
+                    width: '100%'
                 }}
                 className={classes.smpbProductListWrapper}
             >
@@ -124,13 +139,21 @@ const ProductList = props => {
                 >
                     {data.products.items.map((productItem, indx) => {
                         return (
-                            <GalleryItem
+                            <div
                                 key={indx}
-                                item={productItem}
-                                classes={classes}
-                                formatMessage={formatMessage}
-                                storeConfig={storeConfig}
-                            />
+                                style={{
+                                    minWidth: 220,
+                                    display: 'inline-block',
+                                    marginInlineEnd: 15
+                                }}
+                            >
+                                <GalleryItem
+                                    key={indx}
+                                    item={productItem}
+                                    classes={classes}
+                                    storeConfig={storeConfig}
+                                />
+                            </div>
                         );
                     })}
                 </div>
